@@ -1,14 +1,13 @@
 package org.afterlike.openutils.module.handler;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import net.minecraft.client.Minecraft;
 import org.afterlike.openutils.OpenUtils;
 import org.afterlike.openutils.event.handler.EventHandler;
 import org.afterlike.openutils.event.impl.KeyPressEvent;
 import org.afterlike.openutils.module.api.Module;
 import org.afterlike.openutils.module.api.ModuleCategory;
+import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
 import org.afterlike.openutils.module.impl.client.GuiModule;
 import org.afterlike.openutils.module.impl.minigames.ResourceTrackerModule;
 import org.afterlike.openutils.module.impl.movement.NullMoveModule;
@@ -22,13 +21,13 @@ import org.afterlike.openutils.util.client.ClientUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class ModuleHandler {
-	public static final @NotNull Minecraft mc = Minecraft.getMinecraft();
-	public static final @NotNull List<@NotNull Module> moduleList = new ArrayList<>();
+	private final @NotNull Minecraft mc = Minecraft.getMinecraft();
+	private final @NotNull List<@NotNull Module> moduleList = new ArrayList<>();
 	public void initialize() {
 		OpenUtils.get().getEventBus().subscribe(this);
 		// movement
 		this.register(new NullMoveModule());
-        this.register(new SprintModule());
+		this.register(new SprintModule());
 		// player
 		this.register(new NoBreakDelayModule());
 		// render
@@ -49,7 +48,7 @@ public class ModuleHandler {
 	}
 
 	public @NotNull List<@NotNull Module> getModules() {
-		return moduleList;
+		return Collections.unmodifiableList(moduleList);
 	}
 
 	public boolean isEnabled(@NotNull final Class<? extends Module> moduleClass) {
@@ -82,7 +81,7 @@ public class ModuleHandler {
 		return modulesInCategory;
 	}
 
-	public static @NotNull List<@NotNull Module> getEnabledModules() {
+	public @NotNull List<@NotNull Module> getEnabledModules() {
 		final List<@NotNull Module> enabled = new ArrayList<>();
 		for (@NotNull final Module module : moduleList) {
 			if (module.isEnabled()) {
@@ -92,9 +91,13 @@ public class ModuleHandler {
 		return enabled;
 	}
 
-	public static @NotNull List<@NotNull Module> getEnabledModulesSorted() {
+	public @NotNull List<@NotNull Module> getEnabledModulesSorted() {
 		final List<@NotNull Module> enabled = getEnabledModules();
-		if (HUDModule.alphabeticalSort.getValue()) {
+		final HUDModule hud = getModuleClass(HUDModule.class);
+		final BooleanSetting alphabeticalSetting = hud.getSetting("alphabeticalSort");
+		final boolean alphabeticalSort = alphabeticalSetting != null
+				&& Boolean.TRUE.equals(alphabeticalSetting.getValue());
+		if (alphabeticalSort) {
 			enabled.sort(Comparator.comparing(Module::getName));
 		} else {
 			enabled.sort((m1, m2) -> mc.fontRendererObj.getStringWidth(m2.getName())
@@ -104,7 +107,7 @@ public class ModuleHandler {
 	}
 
 	@EventHandler
-	public void onKeyPress(@NotNull final KeyPressEvent event) {
+	private void onKeyPress(@NotNull final KeyPressEvent event) {
 		if (!event.isPressed()) {
 			return;
 		}

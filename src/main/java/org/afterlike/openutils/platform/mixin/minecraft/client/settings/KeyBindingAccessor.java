@@ -6,6 +6,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(KeyBinding.class)
 public interface KeyBindingAccessor {
-    @Accessor("pressed")
-    void ou$setPressed(boolean pressed);
+	@Accessor("pressed")
+	void ou$setPressed(boolean pressed);
 }

@@ -70,9 +70,9 @@ public class ConfigHandler {
 				continue;
 			module.setKeybind(entry.keybind);
 			if (entry.enabled && !module.isEnabled()) {
-				module.enable();
+				module.setEnabled(true);
 			} else if (!entry.enabled && module.isEnabled()) {
-				module.disable();
+				module.setEnabled(false);
 			}
 			@Nullable final Map<String, Object> settings = entry.settings;
 			if (settings == null)

@@ -10,19 +10,19 @@ import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
 
 public class GuiModule extends Module {
-	public static ModeSetting theme;
+	private final ModeSetting theme;
 	public GuiModule() {
 		super("Gui", ModuleCategory.CLIENT, Keyboard.KEY_RSHIFT);
-		this.registerSetting(
-				theme = new ModeSetting("Theme", "Raven B3", "Raven B1", "Raven B2", "Raven B3"));
+		theme = this.registerSetting(
+				new ModeSetting("Theme", "Raven B3", "Raven B1", "Raven B2", "Raven B3"));
 	}
 
 	@Override
-	public void onEnable() {
+	protected void onEnable() {
 		if (ClientUtil.notNull() && !(mc.currentScreen instanceof ClickGuiScreen)) {
 			@NotNull final ClickGuiScreen screen = OpenUtils.get().getClickGuiScreen();
 			mc.displayGuiScreen(screen);
 		}
-		this.disable();
+		this.setEnabled(false);
 	}
 }

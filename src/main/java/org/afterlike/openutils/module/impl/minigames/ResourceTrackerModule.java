@@ -15,26 +15,26 @@ import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
 import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
+import org.jetbrains.annotations.NotNull;
 
 public class ResourceTrackerModule extends Module {
-	public static DescriptionSetting description;
-	public static BooleanSetting pingSound;
-	public static BooleanSetting trackIron;
-	public static BooleanSetting trackGold;
-	public static BooleanSetting trackDiamonds;
-	public static BooleanSetting trackEmeralds;
+	private final DescriptionSetting description;
+	private final BooleanSetting trackIron;
+	private final BooleanSetting trackGold;
+	private final BooleanSetting trackDiamonds;
+	private final BooleanSetting trackEmeralds;
 	public ResourceTrackerModule() {
 		super("Resource Tracker", ModuleCategory.MINIGAMES);
-		this.registerSetting(
-				description = new DescriptionSetting("Tracks resources in your inventory"));
-		this.registerSetting(trackIron = new BooleanSetting("Track Iron", false));
-		this.registerSetting(trackGold = new BooleanSetting("Track Gold", false));
-		this.registerSetting(trackDiamonds = new BooleanSetting("Track Diamonds", true));
-		this.registerSetting(trackEmeralds = new BooleanSetting("Track Emeralds", true));
+		description = this
+				.registerSetting(new DescriptionSetting("Tracks resources in your inventory"));
+		trackIron = this.registerSetting(new BooleanSetting("Track Iron", false));
+		trackGold = this.registerSetting(new BooleanSetting("Track Gold", false));
+		trackDiamonds = this.registerSetting(new BooleanSetting("Track Diamonds", true));
+		trackEmeralds = this.registerSetting(new BooleanSetting("Track Emeralds", true));
 	}
-	private static final Map<Item, Integer> lastCounts = new HashMap<>();
+	private final Map<Item, Integer> lastCounts = new HashMap<>();
 	@EventHandler
-	public void onTick(GameTickEvent event) {
+	private void onTick(final @NotNull GameTickEvent event) {
 		if (event.getPhase() != EventPhase.POST)
 			return;
 		if (!GameModeUtil.onHypixel())
@@ -58,7 +58,7 @@ public class ResourceTrackerModule extends Module {
 		lastCounts.putAll(current);
 	}
 
-	private void handleChanges(Map<Item, Integer> current) {
+	private void handleChanges(final @NotNull Map<@NotNull Item, @NotNull Integer> current) {
 		for (Map.Entry<Item, Integer> entry : current.entrySet()) {
 			Item item = entry.getKey();
 			int newCount = entry.getValue();
@@ -80,7 +80,7 @@ public class ResourceTrackerModule extends Module {
 		}
 	}
 
-	private boolean isTracking(Item item) {
+	private boolean isTracking(final @NotNull Item item) {
 		if (item == Items.iron_ingot)
 			return trackIron.getValue();
 		if (item == Items.gold_ingot)
@@ -92,7 +92,7 @@ public class ResourceTrackerModule extends Module {
 		return false;
 	}
 
-	private String getItemDisplayName(Item item) {
+	private String getItemDisplayName(final @NotNull Item item) {
 		if (item == Items.iron_ingot)
 			return EnumChatFormatting.WHITE + "Iron";
 		if (item == Items.gold_ingot)
@@ -104,20 +104,20 @@ public class ResourceTrackerModule extends Module {
 		return "Unknown";
 	}
 
-	private static void initCounts(Map<Item, Integer> map) {
+	private void initCounts(final @NotNull Map<@NotNull Item, @NotNull Integer> map) {
 		map.put(Items.iron_ingot, 0);
 		map.put(Items.gold_ingot, 0);
 		map.put(Items.diamond, 0);
 		map.put(Items.emerald, 0);
 	}
 
-	private static void resetCounts() {
+	private void resetCounts() {
 		lastCounts.clear();
 		initCounts(lastCounts);
 	}
 
 	@Override
-	public void onDisable() {
+	protected void onDisable() {
 		resetCounts();
 	}
 }

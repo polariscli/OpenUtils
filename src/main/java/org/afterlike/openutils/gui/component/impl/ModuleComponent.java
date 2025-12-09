@@ -3,6 +3,7 @@ package org.afterlike.openutils.gui.component.impl;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.afterlike.openutils.OpenUtils;
 import org.afterlike.openutils.gui.component.Component;
 import org.afterlike.openutils.gui.panel.CategoryPanel;
 import org.afterlike.openutils.module.api.Module;
@@ -102,7 +103,7 @@ public class ModuleComponent extends Component {
 		float r = 0.0F;
 		float g = 0.0F;
 		float b = 0.0F;
-		final String theme = GuiModule.theme.getValue();
+		final String theme = getThemeSetting().getValue();
 		if ("Raven B1".equalsIgnoreCase(theme)) {
 			a = (h >> 14 & 0xFF) / 255.0F;
 			r = (h >> 5 & 0xFF) / 255.0F;
@@ -140,7 +141,7 @@ public class ModuleComponent extends Component {
 				this.module.isEnabled() ? this.enabledFillColor : -12829381,
 				this.module.isEnabled() ? this.enabledFillColor : -12302777);
 		GL11.glPushMatrix();
-		final boolean themeHighlight = GuiModule.theme.getValue().equalsIgnoreCase("Raven B3");
+		final boolean themeHighlight = getThemeSetting().getValue().equalsIgnoreCase("Raven B3");
 		final int button_rgb = themeHighlight
 				? (this.module.isEnabled() ? this.enabledTextColor : Color.lightGray.getRGB())
 				: Color.lightGray.getRGB();
@@ -216,5 +217,10 @@ public class ModuleComponent extends Component {
 		return x > this.panel.getX() && x < this.panel.getX() + this.panel.getWidth()
 				&& y > this.panel.getY() + this.yOffset
 				&& y < this.panel.getY() + 16 + this.yOffset;
+	}
+
+	private static ModeSetting getThemeSetting() {
+		return OpenUtils.get().getModuleHandler().getModuleClass(GuiModule.class)
+				.getSetting("theme");
 	}
 }

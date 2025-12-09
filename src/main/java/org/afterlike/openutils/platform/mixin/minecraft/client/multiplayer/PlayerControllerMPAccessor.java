@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(value = PlayerControllerMP.class)
 public interface PlayerControllerMPAccessor {
 	@Accessor(value = "blockHitDelay")
-	public void ou$setBlockHitDelay(int delay);
+	void ou$setBlockHitDelay(int delay);
 
 	@Accessor(value = "blockHitDelay")
-	public int ou$getBlockHitDelay();
+	int ou$getBlockHitDelay();
 }

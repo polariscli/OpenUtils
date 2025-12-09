@@ -7,24 +7,24 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
+import org.afterlike.openutils.OpenUtils;
 import org.afterlike.openutils.event.handler.EventHandler;
 import org.afterlike.openutils.event.impl.RenderOverlayEvent;
 import org.afterlike.openutils.module.api.Module;
 import org.afterlike.openutils.module.api.ModuleCategory;
 import org.afterlike.openutils.module.api.setting.Setting;
 import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
-import org.afterlike.openutils.module.handler.ModuleHandler;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.game.RenderUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class HUDModule extends Module {
-	public static BooleanSetting editPosition;
-	public static BooleanSetting dropShadow;
-	public static BooleanSetting alphabeticalSort;
-	private static int hudX = 5;
-	private static int hudY = 70;
+	private final BooleanSetting editPosition;
+	private final BooleanSetting dropShadow;
+	private final BooleanSetting alphabeticalSort;
+	private int hudX = 5;
+	private int hudY = 70;
 	public HUDModule() {
 		super("HUD", ModuleCategory.RENDER);
 		this.registerSetting(editPosition = new BooleanSetting("Edit position", false));
@@ -33,15 +33,16 @@ public class HUDModule extends Module {
 	}
 
 	@Override
-	public void onSettingChanged(@Nullable final Setting setting) {
+	public void onSettingChanged(@Nullable final Setting<?> setting) {
 		if (setting == editPosition) {
 			editPosition.disable();
 			mc.displayGuiScreen(new EditorGuiScreen());
 		}
+		super.onSettingChanged(setting);
 	}
 
 	@EventHandler
-	public void onRenderOverlay(@NotNull final RenderOverlayEvent event) {
+	private void onRenderOverlay(@NotNull final RenderOverlayEvent event) {
 		if (!ClientUtil.notNull()) {
 			return;
 		}
@@ -50,7 +51,7 @@ public class HUDModule extends Module {
 		}
 		int y = hudY;
 		int delta = 0;
-		for (@NotNull final Module module : ModuleHandler.getEnabledModulesSorted()) {
+		for (@NotNull final Module module : OpenUtils.get().getModuleHandler().getEnabledModulesSorted()) {
 			if (module.isEnabled() && module != this) {
 				mc.fontRendererObj.drawString(module.getName(), hudX, y,
 						RenderUtil.getChromaColor(2L, delta), dropShadow.getValue());
@@ -59,7 +60,7 @@ public class HUDModule extends Module {
 			}
 		}
 	}
-	static class EditorGuiScreen extends GuiScreen {
+	class EditorGuiScreen extends GuiScreen {
 		private static final String SAMPLE_TEXT = "This is an-Example-HUD";
 		private GuiButtonExt resetButton;
 		private boolean dragging = false;
@@ -77,8 +78,8 @@ public class HUDModule extends Module {
 			super.initGui();
 			this.buttonList.add(this.resetButton = new GuiButtonExt(1, this.width - 90, 5, 85, 20,
 					"Reset position"));
-			this.currentX = HUDModule.hudX;
-			this.currentY = HUDModule.hudY;
+			this.currentX = HUDModule.this.hudX;
+			this.currentY = HUDModule.this.hudY;
 		}
 
 		public void drawScreen(final int mX, final int mY, final float pt) {
@@ -92,8 +93,8 @@ public class HUDModule extends Module {
 			this.previewMinY = minY;
 			this.previewMaxX = maxX;
 			this.previewMaxY = maxY;
-			HUDModule.hudX = minX;
-			HUDModule.hudY = minY;
+			HUDModule.this.hudX = minX;
+			HUDModule.this.hudY = minY;
 			final ScaledResolution res = new ScaledResolution(this.mc);
 			final int x = res.getScaledWidth() / 2 - 84;
 			final int y = res.getScaledHeight() / 2 - 20;
@@ -111,7 +112,7 @@ public class HUDModule extends Module {
 			int y = this.previewMinY;
 			for (final String line : EditorGuiScreen.SAMPLE_TEXT.split("-")) {
 				fontRenderer.drawString(line, x, y, Color.white.getRGB(),
-						HUDModule.dropShadow.getValue());
+						HUDModule.this.dropShadow.getValue());
 				y += fontRenderer.FONT_HEIGHT + 2;
 			}
 		}
@@ -141,10 +142,10 @@ public class HUDModule extends Module {
 			}
 		}
 
-		public void actionPerformed(final GuiButton button) {
+		protected void actionPerformed(final GuiButton button) {
 			if (button == this.resetButton) {
-				this.currentX = HUDModule.hudX = 5;
-				this.currentY = HUDModule.hudY = 70;
+				this.currentX = HUDModule.this.hudX = 5;
+				this.currentY = HUDModule.this.hudY = 70;
 			}
 		}
 

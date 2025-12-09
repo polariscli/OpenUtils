@@ -30,41 +30,41 @@ public class Module {
 		this(name, category, Keyboard.KEY_NONE);
 	}
 
-	public void registerSetting(@NotNull Setting<?> setting) {
+	protected final <T extends Setting<?>> T registerSetting(@NotNull T setting) {
 		this.settings.add(setting);
+		return setting;
 	}
 
 	public @NotNull List<@NotNull Setting<?>> getSettings() {
 		return this.settings;
 	}
 
-	public void onSettingChanged(@Nullable Setting<?> setting) {
-		OpenUtils.get().getConfigHandler().saveConfiguration();
-	}
-
-	public void enable() {
-		setEnabled(true);
-		OpenUtils.get().getEventBus().subscribe(this);
-		onEnable();
-		OpenUtils.get().getConfigHandler().saveConfiguration();
-	}
-
-	public void disable() {
-		setEnabled(false);
-		OpenUtils.get().getEventBus().unsubscribe(this);
-		onDisable();
-		OpenUtils.get().getConfigHandler().saveConfiguration();
+	@SuppressWarnings("unchecked")
+	public <S extends Setting<?>> @Nullable S getSetting(String name) {
+		for (Setting<?> setting : settings) {
+			if (setting.getName().equalsIgnoreCase(name)) {
+				return (S) setting;
+			}
+		}
+		return null;
 	}
 
 	public void toggle() {
-		if (enabled)
-			disable();
-		else
-			enable();
+		setEnabled(!enabled);
 	}
 
 	public void setEnabled(boolean enabled) {
+		if (this.enabled == enabled)
+			return;
 		this.enabled = enabled;
+		if (enabled) {
+			onEnable();
+			OpenUtils.get().getEventBus().subscribe(this);
+		} else {
+			onDisable();
+			OpenUtils.get().getEventBus().unsubscribe(this);
+		}
+		OpenUtils.get().getConfigHandler().saveConfiguration();
 	}
 
 	public boolean isEnabled() {
@@ -91,9 +91,14 @@ public class Module {
 		return keybindSetting;
 	}
 
-	public void onEnable() {
+	// override the following if needed
+	protected void onEnable() {
 	}
 
-	public void onDisable() {
+	protected void onDisable() {
+	}
+
+	public void onSettingChanged(@Nullable Setting<?> setting) {
+		OpenUtils.get().getConfigHandler().saveConfiguration();
 	}
 }

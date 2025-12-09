@@ -8,19 +8,20 @@ import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
 import org.afterlike.openutils.module.api.setting.impl.NumberSetting;
 import org.afterlike.openutils.platform.mixin.minecraft.client.multiplayer.PlayerControllerMPAccessor;
 import org.afterlike.openutils.util.client.ClientUtil;
+import org.jetbrains.annotations.NotNull;
 
 public class NoBreakDelayModule extends Module {
-	public static DescriptionSetting description;
-	public static NumberSetting delay;
+	private final DescriptionSetting description;
+	private final NumberSetting delay;
 	public NoBreakDelayModule() {
 		super("No Break Delay", ModuleCategory.PLAYER);
-		this.registerSetting(
-				description = new DescriptionSetting("Reduces the delay between block breaks"));
-		this.registerSetting(delay = new NumberSetting("Delay (ticks)", 0, 0, 5, 1));
+		description = this
+				.registerSetting(new DescriptionSetting("Reduces the delay between block breaks"));
+		delay = this.registerSetting(new NumberSetting("Delay (ticks)", 0, 0, 5, 1));
 	}
 
 	@EventHandler
-	public void onTick(GameTickEvent event) {
+	private void onTick(final @NotNull GameTickEvent event) {
 		if (ClientUtil.notNull()) {
 			PlayerControllerMPAccessor accessor = (PlayerControllerMPAccessor) mc.playerController;
 			if (accessor.ou$getBlockHitDelay() > delay.getInt()) {
