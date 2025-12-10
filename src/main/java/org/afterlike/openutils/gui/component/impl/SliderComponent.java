@@ -155,4 +155,9 @@ public class SliderComponent extends Component {
 		return x > this.x + this.parent.panel.getWidth() / 2
 				&& x < this.x + this.parent.panel.getWidth() && y > this.y && y < this.y + 16;
 	}
+
+	@Override
+	public int getHeight() {
+		return 16;
+	}
 }

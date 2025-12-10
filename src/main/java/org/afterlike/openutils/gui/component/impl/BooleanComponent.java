@@ -102,4 +102,9 @@ public class BooleanComponent extends Component {
 		return x > this.x && x < this.x + this.parent.panel.getWidth() && y > this.y
 				&& y < this.y + 11;
 	}
+
+	@Override
+	public int getHeight() {
+		return 12;
+	}
 }

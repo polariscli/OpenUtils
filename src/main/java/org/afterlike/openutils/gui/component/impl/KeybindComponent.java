@@ -75,7 +75,7 @@ public class KeybindComponent extends Component {
 
 	@Override
 	public int getHeight() {
-		return 16;
+		return 12;
 	}
 
 	private void drawLabel(@NotNull final String label) {

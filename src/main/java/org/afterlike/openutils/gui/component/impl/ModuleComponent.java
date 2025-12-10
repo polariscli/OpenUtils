@@ -68,12 +68,7 @@ public class ModuleComponent extends Component {
 		int y = this.yOffset + 16;
 		for (@NotNull final Component comp : this.settingComponents) {
 			comp.setOffset(y);
-			if (comp instanceof SliderComponent) {
-				y += 16;
-			} else if (comp instanceof BooleanComponent || comp instanceof KeybindComponent
-					|| comp instanceof DescriptionComponent) {
-				y += 12;
-			}
+			y += comp.getHeight();
 		}
 	}
 
@@ -164,13 +159,7 @@ public class ModuleComponent extends Component {
 		} else {
 			int h = 16;
 			for (@NotNull final Component component : this.settingComponents) {
-				if (component instanceof SliderComponent) {
-					h += 16;
-				} else if (component instanceof BooleanComponent
-						|| component instanceof KeybindComponent
-						|| component instanceof DescriptionComponent) {
-					h += 12;
-				}
+				h += component.getHeight();
 			}
 			return h;
 		}
