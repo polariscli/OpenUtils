@@ -26,7 +26,7 @@ public class ArrayListModule extends Module {
 	private int hudX = 5;
 	private int hudY = 70;
 	public ArrayListModule() {
-		super("ArrayList", ModuleCategory.RENDER);
+		super("Array List", ModuleCategory.RENDER);
 		this.registerSetting(editPosition = new BooleanSetting("Edit position", false));
 		this.registerSetting(dropShadow = new BooleanSetting("Drop shadow", true));
 		this.registerSetting(alphabeticalSort = new BooleanSetting("Alphabetical sort", false));

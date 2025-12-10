@@ -39,7 +39,7 @@ public class ModuleHandler {
 		// world
 		this.register(new AntiBotModule());
 		// minigames
-		this.register(new ResourceTrackerModule());
+		this.register(new ResourceCountModule());
 		// other
 		this.register(new NameHiderModule());
 		// client

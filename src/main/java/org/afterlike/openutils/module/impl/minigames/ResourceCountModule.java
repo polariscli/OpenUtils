@@ -17,14 +17,14 @@ import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class ResourceTrackerModule extends Module {
+public class ResourceCountModule extends Module {
 	private final DescriptionSetting description;
 	private final BooleanSetting trackIron;
 	private final BooleanSetting trackGold;
 	private final BooleanSetting trackDiamonds;
 	private final BooleanSetting trackEmeralds;
-	public ResourceTrackerModule() {
-		super("Resource Tracker", ModuleCategory.MINIGAMES);
+	public ResourceCountModule() {
+		super("Resource Count", ModuleCategory.MINIGAMES);
 		description = this
 				.registerSetting(new DescriptionSetting("Tracks resources in your inventory"));
 		trackIron = this.registerSetting(new BooleanSetting("Track Iron", false));
