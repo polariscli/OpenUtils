@@ -9,6 +9,7 @@ import org.afterlike.openutils.gui.panel.CategoryPanel;
 import org.afterlike.openutils.module.api.ModuleCategory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.input.Keyboard;
 
 public class ClickGuiScreen extends GuiScreen {
 	public static @Nullable ArrayList<@NotNull CategoryPanel> categoryPanels;
@@ -89,7 +90,7 @@ public class ClickGuiScreen extends GuiScreen {
 				}
 			}
 		}
-		if (keyCode == 1 && !bindingInProgress) {
+		if (keyCode == Keyboard.KEY_ESCAPE && !bindingInProgress) {
 			this.mc.displayGuiScreen(null);
 		}
 	}
