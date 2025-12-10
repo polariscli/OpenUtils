@@ -17,12 +17,14 @@ import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
 import org.jetbrains.annotations.NotNull;
 
+// TODO: rewrite - currently a direct port from meowtils
 public class ResourceCountModule extends Module {
 	private final DescriptionSetting description;
 	private final BooleanSetting trackIron;
 	private final BooleanSetting trackGold;
 	private final BooleanSetting trackDiamonds;
 	private final BooleanSetting trackEmeralds;
+	private final BooleanSetting pingSound;
 	public ResourceCountModule() {
 		super("Resource Count", ModuleCategory.MINIGAMES);
 		description = this
@@ -31,6 +33,7 @@ public class ResourceCountModule extends Module {
 		trackGold = this.registerSetting(new BooleanSetting("Track Gold", false));
 		trackDiamonds = this.registerSetting(new BooleanSetting("Track Diamonds", true));
 		trackEmeralds = this.registerSetting(new BooleanSetting("Track Emeralds", true));
+		pingSound = this.registerSetting(new BooleanSetting("Ping Sound", false));
 	}
 	private final Map<Item, Integer> lastCounts = new HashMap<>();
 	@EventHandler
@@ -73,10 +76,9 @@ public class ResourceCountModule extends Module {
 					: EnumChatFormatting.RED + "[-] ";
 			ClientUtil.sendMessage(prefix + getItemDisplayName(item) + EnumChatFormatting.DARK_GRAY
 					+ " (" + newCount + ")");
-			// TODO: add sound utils
-			// if (pingSound.getValue()) {
-			// SoundUtil.playPing();
-			// }
+			if (pingSound.getValue()) {
+				mc.thePlayer.playSound("random.orb", 1.0F, 0.8F);
+			}
 		}
 	}
 
