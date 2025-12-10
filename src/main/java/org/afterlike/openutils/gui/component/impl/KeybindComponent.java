@@ -68,6 +68,10 @@ public class KeybindComponent extends Component {
 		}
 	}
 
+	public boolean isBinding() {
+		return this.isBinding;
+	}
+
 	public boolean isMouseOver(final int x, final int y) {
 		return x > this.x && x < this.x + this.parent.panel.getWidth() && y > this.y - 1
 				&& y < this.y + 12;

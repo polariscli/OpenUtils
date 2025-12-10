@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import net.minecraft.client.gui.GuiScreen;
 import org.afterlike.openutils.OpenUtils;
 import org.afterlike.openutils.gui.component.Component;
+import org.afterlike.openutils.gui.component.impl.ModuleComponent;
 import org.afterlike.openutils.gui.panel.CategoryPanel;
 import org.afterlike.openutils.module.api.ModuleCategory;
 import org.jetbrains.annotations.NotNull;
@@ -78,11 +79,8 @@ public class ClickGuiScreen extends GuiScreen {
 	}
 
 	public void keyTyped(final char typedChar, final int keyCode) {
-		if (keyCode == 1) {
-			this.mc.displayGuiScreen(null);
-		} else {
-			if (categoryPanels == null)
-				return;
+		final boolean bindingInProgress = this.isBinding();
+		if (categoryPanels != null) {
 			for (@NotNull final CategoryPanel panel : categoryPanels) {
 				if (panel.isExpanded() && !panel.getComponents().isEmpty()) {
 					for (@NotNull final Component component : panel.getComponents()) {
@@ -90,6 +88,9 @@ public class ClickGuiScreen extends GuiScreen {
 					}
 				}
 			}
+		}
+		if (keyCode == 1 && !bindingInProgress) {
+			this.mc.displayGuiScreen(null);
 		}
 	}
 
@@ -100,5 +101,21 @@ public class ClickGuiScreen extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		OpenUtils.get().getConfigHandler().saveConfiguration();
+	}
+
+	private boolean isBinding() {
+		if (categoryPanels == null)
+			return false;
+		for (@NotNull final CategoryPanel panel : categoryPanels) {
+			if (panel.isExpanded() && !panel.getComponents().isEmpty()) {
+				for (@NotNull final Component component : panel.getComponents()) {
+					if (component instanceof ModuleComponent
+							&& ((ModuleComponent) component).isBinding()) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 }

@@ -206,6 +206,15 @@ public class ModuleComponent extends Component {
 		}
 	}
 
+	public boolean isBinding() {
+		for (@NotNull final Component c : this.settingComponents) {
+			if (c instanceof KeybindComponent && ((KeybindComponent) c).isBinding()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public boolean isMouseOverButton(final int x, final int y) {
 		return x > this.panel.getX() && x < this.panel.getX() + this.panel.getWidth()
 				&& y > this.panel.getY() + this.yOffset
