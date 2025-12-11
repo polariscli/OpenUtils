@@ -54,7 +54,7 @@ public class KeybindComponent extends Component {
 	public void onKeyTyped(final char key, final int keyCode) {
 		if (this.isBinding) {
 			final KeybindSetting keySetting = this.parent.module.getKeybindSetting();
-			if (keyCode == Keyboard.KEY_ESCAPE) {
+			if (keyCode == 0) {
 				if (this.parent.module instanceof GuiModule) {
 					keySetting.setValue(Keyboard.KEY_RSHIFT);
 				} else {

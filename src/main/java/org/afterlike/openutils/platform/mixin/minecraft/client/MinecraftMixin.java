@@ -1,17 +1,15 @@
 package org.afterlike.openutils.platform.mixin.minecraft.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
 import org.afterlike.openutils.OpenUtils;
 import org.afterlike.openutils.event.api.EventPhase;
-import org.afterlike.openutils.event.impl.GameTickEvent;
-import org.afterlike.openutils.event.impl.KeyPressEvent;
-import org.afterlike.openutils.event.impl.ResizeWindowEvent;
+import org.afterlike.openutils.event.impl.*;
 import org.jetbrains.annotations.NotNull;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
@@ -31,11 +29,26 @@ public abstract class MinecraftMixin {
 		OpenUtils.get().getEventBus().post(new ResizeWindowEvent());
 	}
 
-	@Redirect(method = "runTick", at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/client/settings/KeyBinding;setKeyBindState(IZ)V"))
-	private void ou$setKeyBindState(final int keyCode, final boolean pressed) {
-		KeyBinding.setKeyBindState(keyCode, pressed);
+	@Inject(method = "runTick", at = @At(value = "INVOKE",
+			target = "Lorg/lwjgl/input/Keyboard;next()Z", shift = At.Shift.AFTER, remap = false))
+	private void ou$runTick$Keyboard$next(CallbackInfo ci) {
+		int keyCode = Keyboard.getEventKey();
+		boolean pressed = Keyboard.getEventKeyState();
 		OpenUtils.get().getEventBus().post(new KeyPressEvent(keyCode, pressed));
+	}
+
+	@Inject(method = "runTick", at = @At(value = "INVOKE",
+			target = "Lorg/lwjgl/input/Mouse;next()Z", shift = At.Shift.AFTER, remap = false))
+	private void ou$runTick$Mouse$next(CallbackInfo ci) {
+		int button = Mouse.getEventButton();
+		boolean state = Mouse.getEventButtonState();
+		int dWheel = Mouse.getEventDWheel();
+		if (dWheel != 0) {
+			OpenUtils.get().getEventBus().post(new MouseScrollEvent(dWheel));
+		}
+		if (button >= 0) {
+			OpenUtils.get().getEventBus().post(new MouseButtonEvent(button, state));
+		}
 	}
 
 	@Inject(method = "runTick", at = @At("HEAD"))
