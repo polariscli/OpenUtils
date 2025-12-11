@@ -16,11 +16,14 @@ import java.util.Map;
 import net.minecraft.client.Minecraft;
 import org.afterlike.openutils.OpenUtils;
 import org.afterlike.openutils.config.api.ConfigData;
+import org.afterlike.openutils.config.api.HudEntry;
 import org.afterlike.openutils.config.api.ModuleEntry;
 import org.afterlike.openutils.config.api.PanelEntry;
 import org.afterlike.openutils.gui.ClickGuiScreen;
 import org.afterlike.openutils.gui.panel.CategoryPanel;
 import org.afterlike.openutils.module.api.Module;
+import org.afterlike.openutils.module.api.hud.HudModule;
+import org.afterlike.openutils.module.api.hud.Position;
 import org.afterlike.openutils.module.api.setting.Setting;
 import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
 import org.afterlike.openutils.module.api.setting.impl.KeybindSetting;
@@ -91,6 +94,10 @@ public class ConfigHandler {
 					((KeybindSetting) setting).setValue(((Number) value).intValue());
 				}
 			}
+			if (module instanceof HudModule && entry.hud != null) {
+				final Position position = ((HudModule) module).getHudPosition();
+				position.setPosition(entry.hud.x, entry.hud.y);
+			}
 		}
 	}
 
@@ -122,6 +129,13 @@ public class ConfigHandler {
 			entry.settings = new HashMap<>();
 			for (final Setting<?> setting : module.getSettings()) {
 				entry.settings.put(setting.getName(), setting.getValue());
+			}
+			if (module instanceof HudModule) {
+				final Position position = ((HudModule) module).getHudPosition();
+				final HudEntry hudEntry = new HudEntry();
+				hudEntry.x = position.getX();
+				hudEntry.y = position.getY();
+				entry.hud = hudEntry;
 			}
 			data.modules.put(module.getName(), entry);
 		}

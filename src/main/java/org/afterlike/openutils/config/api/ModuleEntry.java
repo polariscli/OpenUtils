@@ -8,4 +8,5 @@ public class ModuleEntry {
 	public boolean enabled;
 	public int keybind;
 	public @Nullable Map<@NotNull String, @Nullable Object> settings;
+	public @Nullable HudEntry hud;
 }
