@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import org.afterlike.openutils.module.api.setting.Setting;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class NumberSetting extends Setting<Double> {
 	private final double max;
@@ -57,6 +58,13 @@ public class NumberSetting extends Setting<Double> {
 	@Override
 	public @NotNull Object serializeValue() {
 		return value;
+	}
+
+	@Override
+	public void deserializeValue(@Nullable Object raw) {
+		if (raw instanceof Number) {
+			setValue(((Number) raw).doubleValue());
+		}
 	}
 
 	private static double snap(double value, double step) {

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.afterlike.openutils.module.api.setting.Setting;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ModeSetting extends Setting<String> {
 	private final @NotNull List<@NotNull String> modes;
@@ -63,5 +64,12 @@ public class ModeSetting extends Setting<String> {
 	@Override
 	public @NotNull Object serializeValue() {
 		return value;
+	}
+
+	@Override
+	public void deserializeValue(@Nullable Object raw) {
+		if (raw instanceof String) {
+			setValue((String) raw);
+		}
 	}
 }

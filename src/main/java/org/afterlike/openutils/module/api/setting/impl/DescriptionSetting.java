@@ -24,4 +24,9 @@ public class DescriptionSetting extends Setting<String> {
 	public @Nullable Object serializeValue() {
 		return null;
 	}
+
+	@Override
+	public void deserializeValue(@Nullable Object raw) {
+		// ignore
+	}
 }
