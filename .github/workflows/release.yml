@@ -30,6 +30,5 @@ jobs:
           files: |
             build/libs/*.jar
             build/intermediates/*.jar
-            build/libs/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
