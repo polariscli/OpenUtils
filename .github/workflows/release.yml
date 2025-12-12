@@ -29,6 +29,5 @@ jobs:
           fail_on_unmatched_files: true
           files: |
             build/libs/*.jar
-            build/intermediates/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
