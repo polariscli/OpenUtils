@@ -6,7 +6,7 @@ import org.apache.commons.lang3.SystemUtils
 
 // Version from GitHub Tag:
 val gitRef : String? = System.getenv("GITHUB_REF_NAME")
-version = gitRef?.removePrefix("v") ?: "dev"
+version = gitRef ?: "dev"
 
 // Plugins:
 plugins {
