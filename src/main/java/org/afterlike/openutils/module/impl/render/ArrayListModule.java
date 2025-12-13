@@ -1,7 +1,10 @@
 package org.afterlike.openutils.module.impl.render;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import org.afterlike.openutils.OpenUtils;
 import org.afterlike.openutils.event.handler.EventHandler;
 import org.afterlike.openutils.event.impl.RenderOverlayEvent;
@@ -21,6 +24,12 @@ public class ArrayListModule extends Module implements HudModule {
 	private final BooleanSetting editPosition;
 	private final BooleanSetting dropShadow;
 	private final BooleanSetting alphabeticalSort;
+	private final List<Module> sortedAlpha = new ArrayList<>(64);
+	private final List<Module> sortedWidth = new ArrayList<>(64);
+	private final Map<Module, Integer> widthByModule = new IdentityHashMap<>(64);
+	private boolean cacheBuilt = false;
+	private static final Comparator<Module> ALPHA_COMPARATOR = Comparator
+			.comparing(Module::getName);
 	public ArrayListModule() {
 		super("Array List", ModuleCategory.RENDER);
 		this.registerSetting(editPosition = new BooleanSetting("Edit position", false));
@@ -36,34 +45,42 @@ public class ArrayListModule extends Module implements HudModule {
 
 	@EventHandler
 	private void onRenderOverlay(@NotNull final RenderOverlayEvent event) {
-		if (!ClientUtil.notNull()) {
+		if (!ClientUtil.notNull())
 			return;
-		}
-		if (mc.currentScreen != null || mc.gameSettings.showDebugInfo) {
+		if (mc.currentScreen != null || mc.gameSettings.showDebugInfo)
 			return;
-		}
+		ensureCache();
+		final int x = position.getX();
 		int y = position.getY();
 		int delta = 0;
-		for (@NotNull final Module module : getSorted()) {
-			if (module.isEnabled() && module != this) {
-				mc.fontRendererObj.drawString(module.getName(), position.getX(), y,
-						RenderUtil.getChromaColor(2L, delta), useHudDropShadow());
-				y += mc.fontRendererObj.FONT_HEIGHT + 2;
-				delta -= 120;
-			}
+		final boolean shadow = useHudDropShadow();
+		final int lineStep = mc.fontRendererObj.FONT_HEIGHT + 2;
+		final List<Module> list = alphabeticalSort.getValue() ? sortedAlpha : sortedWidth;
+		for (final Module module : list) {
+			if (module == this || !module.isEnabled())
+				continue;
+			mc.fontRendererObj.drawString(module.getName(), x, y,
+					RenderUtil.getChromaColor(2L, delta), shadow);
+			y += lineStep;
+			delta -= 120;
 		}
 	}
 
-	private @NotNull List<@NotNull Module> getSorted() {
-		final List<@NotNull Module> enabled = OpenUtils.get().getModuleHandler()
-				.getEnabledModules();
-		if (alphabeticalSort.getValue()) {
-			enabled.sort(Comparator.comparing(Module::getName));
-		} else {
-			enabled.sort((m1, m2) -> mc.fontRendererObj.getStringWidth(m2.getName())
-					- mc.fontRendererObj.getStringWidth(m1.getName()));
+	private void ensureCache() {
+		if (cacheBuilt)
+			return;
+		final List<Module> all = OpenUtils.get().getModuleHandler().getModules();
+		sortedAlpha.clear();
+		sortedAlpha.addAll(all);
+		sortedAlpha.sort(ALPHA_COMPARATOR);
+		widthByModule.clear();
+		for (final Module m : all) {
+			widthByModule.put(m, mc.fontRendererObj.getStringWidth(m.getName()));
 		}
-		return enabled;
+		sortedWidth.clear();
+		sortedWidth.addAll(all);
+		sortedWidth.sort((a, b) -> Integer.compare(widthByModule.get(b), widthByModule.get(a)));
+		cacheBuilt = true;
 	}
 
 	@Override
