@@ -40,7 +40,7 @@ public class ModuleHandler {
 		this.register(new NameHiderModule()); // TODO: impl
 		this.register(new ThickRodsModule());
 		// world
-		this.register(new TimeChangerModule()); // TODO: impl
+		this.register(new TimeChangerModule());
 		this.register(new WeatherModule()); // TODO: impl
 		// hypixel
 		this.register(new AutoGGModule());
