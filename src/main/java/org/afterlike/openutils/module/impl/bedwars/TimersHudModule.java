@@ -2,6 +2,7 @@ package org.afterlike.openutils.module.impl.bedwars;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.IntUnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.afterlike.openutils.event.api.EventPhase;
@@ -28,9 +29,17 @@ public class TimersHudModule extends Module implements HudModule {
 	private final DescriptionSetting disclaimer;
 	private final BooleanSetting editPosition;
 	private final BooleanSetting dropShadow;
+	private final BooleanSetting showElapsedTime;
 	private boolean inGame = false;
 	private String mode = "";
 	private int tickCounter = 0;
+	private int elapsedTime = 0;
+	private int emeraldCount = 0;
+	private int emeraldNext = 0;
+	private int diamondCount = 0;
+	private int diamondNext = 0;
+	private static final String MODE_EIGHT = "eight";
+	private static final String MODE_FOUR = "four";
 	private static final int EMERALD_FIRST = 31;
 	private static final int DIAMOND_FIRST = 1;
 	private static final List<Integer> DIAMOND_UPGRADES = Arrays.asList(6 * 60, 18 * 60);
@@ -40,17 +49,21 @@ public class TimersHudModule extends Module implements HudModule {
 			new StageEvent("Diamond III", 18 * 60), new StageEvent("Emerald III", 24 * 60),
 			new StageEvent("Bed gone", 30 * 60), new StageEvent("Sudden Death", 40 * 60),
 			new StageEvent("Game End", 50 * 60));
-	private int emeraldCount = 0;
-	private int emeraldNext = 0;
-	private int diamondCount = 0;
-	private int diamondNext = 0;
 	private static final Pattern TIMER_PATTERN = Pattern.compile("(\\d{1,2}):(\\d{2})");
-	private static class StageEvent {
+	private static final class StageEvent {
 		final String name;
 		final int time;
 		StageEvent(final String name, final int time) {
 			this.name = name;
 			this.time = time;
+		}
+	}
+	private static final class SpawnResult {
+		final int count;
+		final int next;
+		SpawnResult(final int count, final int next) {
+			this.count = count;
+			this.next = next;
 		}
 	}
 	public TimersHudModule() {
@@ -59,6 +72,7 @@ public class TimersHudModule extends Module implements HudModule {
 				.registerSetting(new DescriptionSetting("Hypixel language must be ENGLISH!"));
 		editPosition = this.registerSetting(new BooleanSetting("Edit position", false));
 		dropShadow = this.registerSetting(new BooleanSetting("Drop shadow", true));
+		showElapsedTime = this.registerSetting(new BooleanSetting("Show game time", false));
 	}
 
 	@EventHandler
@@ -68,41 +82,49 @@ public class TimersHudModule extends Module implements HudModule {
 		final int status = GameModeUtil.getBedWarsStatus();
 		if (status == 3) {
 			if (!inGame) {
-				inGame = true;
-				tickCounter = 0;
-				detectMode();
-				updateFromSidebar();
+				startGame();
 			} else {
 				tickCounter++;
 				if (tickCounter % 20 == 0) {
 					updateFromSidebar();
 				}
 			}
-		} else {
-			if (inGame) {
-				resetAll();
-			}
+			return;
+		}
+		if (inGame) {
+			resetAll();
 		}
 	}
 
 	@EventHandler
-	private void onRender(@NotNull final RenderOverlayEvent event) {
-		if (!ClientUtil.notNull())
+	private void onRender(final @NotNull RenderOverlayEvent event) {
+		if (!ClientUtil.notNull() || mc.gameSettings.showDebugInfo || !inGame) {
 			return;
-		if (mc.gameSettings.showDebugInfo)
-			return;
-		if (!inGame)
-			return;
+		}
+		final int x = position.getX();
 		int y = position.getY();
 		int delta = 0;
-		final String emeraldLine = "§aEmeralds (§7" + emeraldCount + "§a): §f" + emeraldNext;
-		mc.fontRendererObj.drawString(emeraldLine, position.getX(), y,
-				RenderUtil.getChromaColor(2L, delta), useHudDropShadow());
+		if (showElapsedTime.getValue()) {
+			drawLine("§eGame Time: §f" + formatTime(elapsedTime), x, y, delta);
+			y += mc.fontRendererObj.FONT_HEIGHT + 2;
+			delta -= 90;
+		}
+		drawLine("§aEmeralds (§7" + emeraldCount + "§a): §f" + emeraldNext, x, y, delta);
 		y += mc.fontRendererObj.FONT_HEIGHT + 2;
 		delta -= 90;
-		final String diamondLine = "§bDiamonds (§7" + diamondCount + "§b): §f" + diamondNext;
-		mc.fontRendererObj.drawString(diamondLine, position.getX(), y,
-				RenderUtil.getChromaColor(2L, delta), useHudDropShadow());
+		drawLine("§bDiamonds (§7" + diamondCount + "§b): §f" + diamondNext, x, y, delta);
+	}
+
+	private void drawLine(final @NotNull String text, final int x, final int y, final int delta) {
+		mc.fontRendererObj.drawString(text, x, y, RenderUtil.getChromaColor(2L, delta),
+				useHudDropShadow());
+	}
+
+	private void startGame() {
+		inGame = true;
+		tickCounter = 0;
+		detectMode();
+		updateFromSidebar();
 	}
 
 	@Override
@@ -135,7 +157,7 @@ public class TimersHudModule extends Module implements HudModule {
 
 	@Override
 	public @NotNull String getHudPlaceholderText() {
-		return "Emeralds:-Diamonds:";
+		return "Game Time:-Emeralds:-Diamonds:";
 	}
 
 	@Override
@@ -152,13 +174,14 @@ public class TimersHudModule extends Module implements HudModule {
 				break;
 			}
 		}
-		mode = hasPink ? "eight" : "four";
+		mode = hasPink ? MODE_EIGHT : MODE_FOUR;
 	}
 
 	private void resetAll() {
 		inGame = false;
 		mode = "";
 		tickCounter = 0;
+		elapsedTime = 0;
 		emeraldCount = 0;
 		emeraldNext = 0;
 		diamondCount = 0;
@@ -166,10 +189,8 @@ public class TimersHudModule extends Module implements HudModule {
 	}
 
 	private int getEmeraldInterval(final int tier) {
-		if ("eight".equals(mode)) {
+		if (MODE_EIGHT.equals(mode)) {
 			switch (tier) {
-				case 1 :
-					return 65;
 				case 2 :
 					return 50;
 				case 3 :
@@ -177,10 +198,8 @@ public class TimersHudModule extends Module implements HudModule {
 				default :
 					return 65;
 			}
-		} else if ("four".equals(mode)) {
+		} else if (MODE_FOUR.equals(mode)) {
 			switch (tier) {
-				case 1 :
-					return 55;
 				case 2 :
 					return 40;
 				case 3 :
@@ -194,8 +213,6 @@ public class TimersHudModule extends Module implements HudModule {
 
 	private int getDiamondInterval(final int tier) {
 		switch (tier) {
-			case 1 :
-				return 30;
 			case 2 :
 				return 23;
 			case 3 :
@@ -216,7 +233,7 @@ public class TimersHudModule extends Module implements HudModule {
 	}
 
 	private @NotNull SpawnResult calculateSpawns(final int time, final int first,
-			final @NotNull List<Integer> upgrades, final @NotNull IntervalFunction intervalGen) {
+			final @NotNull List<Integer> upgrades, final @NotNull IntUnaryOperator intervalGen) {
 		if (time < first) {
 			return new SpawnResult(0, first - time);
 		}
@@ -226,13 +243,13 @@ public class TimersHudModule extends Module implements HudModule {
 		int nextUp = upgrades.isEmpty() ? Integer.MAX_VALUE : upgrades.get(0);
 		while (true) {
 			final int tier = getTier(last, upgrades);
-			final int interval = intervalGen.getInterval(tier);
+			final int interval = intervalGen.applyAsInt(tier);;
 			final int next = last + interval;
 			if (nextUp <= time && nextUp < next) {
 				count++;
 				last = nextUp;
 				idxUp++;
-				nextUp = idxUp < upgrades.size() ? upgrades.get(idxUp) : Integer.MAX_VALUE;
+				nextUp = (idxUp < upgrades.size()) ? upgrades.get(idxUp) : Integer.MAX_VALUE;
 				continue;
 			}
 			if (next > time) {
@@ -247,15 +264,14 @@ public class TimersHudModule extends Module implements HudModule {
 		final List<String> sidebar = WorldUtil.getScoreboard();
 		if (sidebar.size() < 4)
 			return;
-		String raw = TextUtil.stripColorCodes(sidebar.get(3));
-		raw = raw.replaceAll("§[0-9a-fk-or]", "").trim();
+		String raw = TextUtil.stripColorCodes(sidebar.get(3)).trim();
 		final Matcher matcher = TIMER_PATTERN.matcher(raw);
 		if (!matcher.find())
 			return;
 		final String minStr = matcher.group(1);
 		final String secStr = matcher.group(2);
-		int min;
-		int sec;
+		final int min;
+		final int sec;
 		try {
 			min = Integer.parseInt(minStr);
 			sec = Integer.parseInt(secStr);
@@ -273,25 +289,20 @@ public class TimersHudModule extends Module implements HudModule {
 		}
 		if (scheduled == null)
 			return;
-		final int elapsed = scheduled.time - secondsLeft;
-		final SpawnResult emeraldResult = calculateSpawns(elapsed + 1, EMERALD_FIRST,
+		elapsedTime = scheduled.time - secondsLeft;
+		final SpawnResult emeraldResult = calculateSpawns(elapsedTime + 1, EMERALD_FIRST,
 				EMERALD_UPGRADES, this::getEmeraldInterval);
 		emeraldCount = emeraldResult.count;
 		emeraldNext = emeraldResult.next;
-		final SpawnResult diamondResult = calculateSpawns(elapsed + 1, DIAMOND_FIRST,
+		final SpawnResult diamondResult = calculateSpawns(elapsedTime + 1, DIAMOND_FIRST,
 				DIAMOND_UPGRADES, this::getDiamondInterval);
 		diamondCount = diamondResult.count;
 		diamondNext = diamondResult.next;
 	}
-	private interface IntervalFunction {
-		int getInterval(int tier);
-	}
-	private static class SpawnResult {
-		final int count;
-		final int next;
-		SpawnResult(final int count, final int next) {
-			this.count = count;
-			this.next = next;
-		}
+
+	private @NotNull String formatTime(final int seconds) {
+		final int minutes = seconds / 60;
+		final int secs = seconds % 60;
+		return String.format("%d:%02d", minutes, secs);
 	}
 }
