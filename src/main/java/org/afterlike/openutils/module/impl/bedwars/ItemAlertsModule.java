@@ -13,6 +13,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.S04PacketEntityEquipment;
 import net.minecraft.util.EnumChatFormatting;
 import org.afterlike.openutils.event.handler.EventHandler;
@@ -189,7 +190,7 @@ public class ItemAlertsModule extends Module {
 		if (state.lastItem == item && (now - state.lastAlertTime) < COOLDOWN_TIME) {
 			return;
 		}
-		final String itemMessage = createItemMessage(player, item, stack.isItemEnchanted());
+		final String itemMessage = createItemMessage(player, item, stack);
 		ClientUtil.sendMessage(displayName + " §7has " + itemMessage);
 		if (shouldPlaySound(item)) {
 			mc.thePlayer.playSound("random.orb", 1.0F, 1.0F);
@@ -218,10 +219,17 @@ public class ItemAlertsModule extends Module {
 	}
 
 	private String createItemMessage(@NotNull final EntityPlayer player, @NotNull final Item item,
-			final boolean enchanted) {
-		if (item == Items.bow && enchanted) {
-			return "§6Enchanted Bow §7(" + EnumChatFormatting.AQUA + getDistanceString(player)
-					+ EnumChatFormatting.GRAY + ")";
+			@NotNull final ItemStack stack) {
+		if (item == Items.bow && stack.isItemEnchanted()) {
+			final NBTTagList enchantments = stack.getEnchantmentTagList();
+			final int enchantmentCount = enchantments != null ? enchantments.tagCount() : 0;
+			if (enchantmentCount == 1) {
+				return "§dPower Bow §7(" + EnumChatFormatting.AQUA + getDistanceString(player)
+						+ EnumChatFormatting.GRAY + ")";
+			} else if (enchantmentCount == 2) {
+				return "§6Punch Bow §7(" + EnumChatFormatting.AQUA + getDistanceString(player)
+						+ EnumChatFormatting.GRAY + ")";
+			}
 		}
 		final ItemRule rule = rulesByItem.get(item);
 		final String base = rule != null ? rule.message : null;
