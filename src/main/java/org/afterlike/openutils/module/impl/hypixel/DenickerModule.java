@@ -312,7 +312,7 @@ public class DenickerModule extends Module {
 			}
 		}
 		if (denicked) {
-			ClientUtil.sendMessage("§e" + displayName + " §7is nicked as §a" + realName + "§7.");
+			ClientUtil.sendMessage("§e" + realName + " §7is nicked as §a" + displayName + "§7.");
 		} else if (showFailed.getValue()) {
 			ClientUtil.sendMessage("§e" + displayName + " §cis nicked.");
 		}
