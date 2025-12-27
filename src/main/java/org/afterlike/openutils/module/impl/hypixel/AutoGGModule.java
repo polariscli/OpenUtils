@@ -2,11 +2,10 @@ package org.afterlike.openutils.module.impl.hypixel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+import org.afterlike.openutils.event.api.EventPhase;
 import org.afterlike.openutils.event.handler.EventHandler;
+import org.afterlike.openutils.event.impl.GameTickEvent;
 import org.afterlike.openutils.event.impl.ReceiveChatEvent;
 import org.afterlike.openutils.module.api.Module;
 import org.afterlike.openutils.module.api.ModuleCategory;
@@ -17,13 +16,8 @@ import org.afterlike.openutils.util.client.TextUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class AutoGGModule extends Module {
-
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-
-    private final @NotNull NumberSetting delay;
-
-    private final @NotNull ModeSetting content;
-
+	private final @NotNull NumberSetting delay;
+	private final @NotNull ModeSetting content;
 	private static final @NotNull List<Pattern> GAME_END_PATTERNS = new ArrayList<>();
 	static {
 		String[] regexes = new String[]{
@@ -46,10 +40,12 @@ public class AutoGGModule extends Module {
 			GAME_END_PATTERNS.add(Pattern.compile(r));
 		}
 	}
+	private int ticksRemaining = -1;
 	public AutoGGModule() {
 		super("Auto GG", ModuleCategory.HYPIXEL);
-		delay = this.registerSetting(new NumberSetting("Send Delay", 2000, 0, 5000, 100));
-		content = this.registerSetting(new ModeSetting("Content Select", "GG", "gg", "GG", "gG <3"));
+		delay = this.registerSetting(new NumberSetting("Send Delay (ms)", 1000, 0, 5000, 100));
+		// TODO: add text field component
+		content = this.registerSetting(new ModeSetting("Message", "gg", "gg", "GG", "gG <3"));
 	}
 
 	@EventHandler
@@ -64,10 +60,25 @@ public class AutoGGModule extends Module {
 		}
 	}
 
+	@EventHandler
+	public void onTick(GameTickEvent event) {
+		if (event.getPhase() != EventPhase.POST)
+			return;
+		if (ticksRemaining < 0)
+			return;
+		if (--ticksRemaining <= 0) {
+			ClientUtil.sendMessageAsPlayer("/ac " + content.getValue());
+			ticksRemaining = -1;
+		}
+	}
+
 	private void handleGameEnd() {
-		scheduler.schedule(
-				() -> ClientUtil.sendMessageAsPlayer("/ac " + content.getValue()),
-				delay.getValue().longValue(),
-				TimeUnit.MILLISECONDS);
+		if (ticksRemaining >= 0)
+			return;
+		ticksRemaining = msToTicks(delay.getInt());
+	}
+
+	private static int msToTicks(int ms) {
+		return Math.max(1, ms / 50);
 	}
 }
