@@ -39,6 +39,7 @@ public class ModuleHandler {
 		this.register(new CameraModule());
 		this.register(new CapeModule());
 		this.register(new DamageTagsModule());
+		this.register(new FallViewModule());
 		this.register(new FreeLookModule());
 		this.register(new NameHiderModule()); // TODO: impl
 		this.register(new ThickRodsModule());
