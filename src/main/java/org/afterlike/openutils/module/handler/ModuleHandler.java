@@ -62,6 +62,7 @@ public class ModuleHandler {
 		// client
 		this.register(new DebugModule());
 		this.register(new GuiModule());
+		this.register(new VPNStatusModule());
 	}
 
 	private void register(@NotNull final Module module) {
