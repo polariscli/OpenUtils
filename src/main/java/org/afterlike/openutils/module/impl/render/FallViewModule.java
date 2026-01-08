@@ -1,16 +1,16 @@
 package org.afterlike.openutils.module.impl.render;
 
-import java.awt.Color;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.chunk.Chunk;
 import org.afterlike.openutils.event.handler.EventHandler;
+import org.afterlike.openutils.event.impl.GameTickEvent;
 import org.afterlike.openutils.event.impl.RenderOverlayEvent;
 import org.afterlike.openutils.module.api.Module;
 import org.afterlike.openutils.module.api.ModuleCategory;
@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FallViewModule extends Module implements HudModule {
+	private static final int WHITE_ARGB = 0xFFFFFFFF;
 	// this position default will be fixed when i add anchor points
 	private final Position position = new Position(200, 95);
 	private final DescriptionSetting description;
@@ -42,6 +43,12 @@ public class FallViewModule extends Module implements HudModule {
 	private int cachedEnchantmentModifier = -1;
 	private final ItemStack[] cachedArmorInventory = new ItemStack[4];
 	private boolean armorCacheValid = false;
+	private final ItemStack[] armorBuf = new ItemStack[4];
+	private boolean shouldDraw = false;
+	private String cachedDamageStr = null;
+	private String cachedDistanceStr = null;
+	private int cachedDistanceColor = WHITE_ARGB;
+	private int lastComputedTick = Integer.MIN_VALUE;
 	public FallViewModule() {
 		super("Fall View", ModuleCategory.RENDER);
 		description = this.registerSetting(new DescriptionSetting("Shows fall distance damage."));
@@ -68,42 +75,98 @@ public class FallViewModule extends Module implements HudModule {
 		cachedEnchantmentModifier = -1;
 		for (int i = 0; i < 4; i++) {
 			cachedArmorInventory[i] = null;
+			armorBuf[i] = null;
 		}
 		armorCacheValid = false;
+		shouldDraw = false;
+		cachedDamageStr = null;
+		cachedDistanceStr = null;
+		cachedDistanceColor = WHITE_ARGB;
+		lastComputedTick = Integer.MIN_VALUE;
+	}
+
+	private boolean canRunLogic() {
+		if (!ClientUtil.notNull())
+			return false;
+		if (mc.currentScreen != null)
+			return false;
+		if (mc.gameSettings.showDebugInfo)
+			return false;
+		if (mc.thePlayer.capabilities.isCreativeMode)
+			return false;
+		if (disableWhileFlying.getValue() && mc.thePlayer.capabilities.allowFlying)
+			return false;
+		if (onlyWhileSneaking.getValue() && !mc.thePlayer.isSneaking())
+			return false;
+		return true;
+	}
+
+	@EventHandler
+	private void onTick(@NotNull final GameTickEvent event) {
+		if (!canRunLogic())
+			return;
+		final int tick = mc.thePlayer.ticksExisted;
+		if (tick == lastComputedTick)
+			return;
+		updateCache();
+		lastComputedTick = tick;
 	}
 
 	@EventHandler
 	private void onRender(@NotNull final RenderOverlayEvent event) {
-		if (!ClientUtil.notNull())
+		if (!canRunLogic())
 			return;
-		if (mc.currentScreen != null)
+		final int tick = mc.thePlayer.ticksExisted;
+		if (tick != lastComputedTick) {
+			updateCache();
+			lastComputedTick = tick;
+		}
+		if (!shouldDraw || cachedDamageStr == null)
 			return;
-		if (mc.gameSettings.showDebugInfo)
-			return;
-		if (mc.thePlayer.capabilities.isCreativeMode)
-			return;
-		if (disableWhileFlying.getValue() && mc.thePlayer.capabilities.allowFlying)
-			return;
-		if (onlyWhileSneaking.getValue() && !mc.thePlayer.isSneaking())
-			return;
+		final int x = position.getX();
+		final int y = position.getY();
+		final boolean shadow = useHudDropShadow();
+		mc.fontRendererObj.drawString(cachedDamageStr, x, y, WHITE_ARGB, shadow);
+		if (showDistance.getValue() && cachedDistanceStr != null) {
+			mc.fontRendererObj.drawString(cachedDistanceStr, x,
+					y + mc.fontRendererObj.FONT_HEIGHT + 2, cachedDistanceColor, shadow);
+		}
+	}
+
+	private void updateCache() {
+		shouldDraw = false;
+		cachedDamageStr = null;
+		cachedDistanceStr = null;
+		cachedDistanceColor = WHITE_ARGB;
+		final int blockX = MathHelper.floor_double(mc.thePlayer.posX);
+		final int blockZ = MathHelper.floor_double(mc.thePlayer.posZ);
+		final int startY = MathHelper.floor_double(mc.thePlayer.posY);
+		final double groundBelow = findGroundY(blockX, blockZ, startY);
 		final boolean onGround = mc.thePlayer.onGround;
+		final float fallDistance;
 		if (onGround) {
 			fallStartY = -1;
 			groundY = -1;
 			cachedFallDistance = 0;
+			if (groundBelow == -1)
+				return;
+			fallDistance = (float) Math.max(0, mc.thePlayer.posY - groundBelow);
 		} else {
 			if (fallStartY == -1) {
 				fallStartY = mc.thePlayer.posY;
-				groundY = findGroundY(mc.thePlayer.posX, mc.thePlayer.posZ);
-			} else {
-				final double newGroundY = findGroundY(mc.thePlayer.posX, mc.thePlayer.posZ);
-				if (newGroundY != groundY) {
-					groundY = newGroundY;
-					cachedFallDistance = 0;
-				}
+				groundY = groundBelow;
+				cachedFallDistance = 0;
+			} else if (groundBelow != groundY) {
+				groundY = groundBelow;
+				cachedFallDistance = 0;
 			}
+			if (fallStartY == -1 || groundY == -1)
+				return;
+			if (cachedFallDistance == 0) {
+				cachedFallDistance = (float) Math.max(0, fallStartY - groundY);
+			}
+			fallDistance = cachedFallDistance;
 		}
-		final float fallDistance = calculateFallDistance();
 		if (fallDistance <= 2.5f)
 			return;
 		final PotionEffect jumpEffect = mc.thePlayer.getActivePotionEffect(Potion.jump);
@@ -111,11 +174,10 @@ public class FallViewModule extends Module implements HudModule {
 		final PotionEffect resistanceEffect = mc.thePlayer.getActivePotionEffect(Potion.resistance);
 		final boolean hasResistance = resistanceEffect != null;
 		final int resistanceLevel = hasResistance ? resistanceEffect.getAmplifier() + 1 : 0;
-		final ItemStack[] armorInventory = new ItemStack[4];
 		boolean armorChanged = false;
 		for (int i = 0; i < 4; i++) {
 			final ItemStack currentArmor = mc.thePlayer.inventory.armorItemInSlot(i);
-			armorInventory[i] = currentArmor;
+			armorBuf[i] = currentArmor;
 			if (cachedArmorInventory[i] != currentArmor) {
 				armorChanged = true;
 			}
@@ -124,7 +186,7 @@ public class FallViewModule extends Module implements HudModule {
 		if (armorChanged || !armorCacheValid) {
 			long totalModifier = 0;
 			for (int i = 0; i < 100; i++) {
-				int mod = EnchantmentHelper.getEnchantmentModifierDamage(armorInventory,
+				int mod = EnchantmentHelper.getEnchantmentModifierDamage(armorBuf,
 						DamageSource.fall);
 				if (mod > 20)
 					mod = 20;
@@ -132,7 +194,7 @@ public class FallViewModule extends Module implements HudModule {
 			}
 			enchantmentModifier = (int) Math.round(totalModifier / 100.0);
 			cachedEnchantmentModifier = enchantmentModifier;
-			System.arraycopy(armorInventory, 0, cachedArmorInventory, 0, 4);
+			System.arraycopy(armorBuf, 0, cachedArmorInventory, 0, 4);
 			armorCacheValid = true;
 		}
 		float damagePoints = fallDistance - 3.0f - jumpAmplifier;
@@ -152,8 +214,6 @@ public class FallViewModule extends Module implements HudModule {
 		final double damagePercent = (double) finalDamage / currentHealth * 100.0;
 		if (damagePercent <= damageThreshold.getValue())
 			return;
-		final int x = position.getX();
-		final int y = position.getY();
 		float displayDamage = finalDamage;
 		if (showAsHearts.getValue()) {
 			displayDamage = finalDamage / 2.0f;
@@ -176,35 +236,22 @@ public class FallViewModule extends Module implements HudModule {
 		if (showHeartSymbol.getValue()) {
 			damageStr += "§c❤§r";
 		}
-		mc.fontRendererObj.drawString(damageStr, x, y, Color.WHITE.getRGB(), useHudDropShadow());
+		cachedDamageStr = damageStr;
+		shouldDraw = true;
 		if (showDistance.getValue()) {
-			final Color distanceColor = getDistanceColor(fallDistance);
-			final String distanceStr = formatNumber(round(fallDistance, 2)) + "m";
-			mc.fontRendererObj.drawString(distanceStr, x, y + mc.fontRendererObj.FONT_HEIGHT + 2,
-					distanceColor.getRGB(), useHudDropShadow());
+			cachedDistanceColor = getDistanceColorArgb(fallDistance);
+			cachedDistanceStr = formatNumber(round(fallDistance, 2)) + "m";
 		}
 	}
 
-	private float calculateFallDistance() {
-		if (fallStartY == -1 || groundY == -1) {
-			final double currentY = mc.thePlayer.posY;
-			final double ground = findGroundY(mc.thePlayer.posX, mc.thePlayer.posZ);
-			if (ground == -1) {
-				return 0;
-			}
-			return (float) Math.max(0, currentY - ground);
-		}
-		if (cachedFallDistance == 0) {
-			cachedFallDistance = (float) Math.max(0, fallStartY - groundY);
-		}
-		return cachedFallDistance;
-	}
-
-	private double findGroundY(final double x, final double z) {
-		final int startY = (int) Math.floor(mc.thePlayer.posY);
+	private double findGroundY(final int x, final int z, final int startY) {
+		if (!mc.theWorld.getChunkProvider().chunkExists(x >> 4, z >> 4))
+			return -1;
+		final Chunk chunk = mc.theWorld.getChunkFromChunkCoords(x >> 4, z >> 4);
+		final int lx = x & 15;
+		final int lz = z & 15;
 		for (int y = startY; y > -1; y--) {
-			final BlockPos pos = new BlockPos(Math.floor(x), y, Math.floor(z));
-			final Block block = mc.theWorld.getBlockState(pos).getBlock();
+			final Block block = chunk.getBlock(lx, y, lz);
 			if (block.getMaterial() != Material.air && block.isCollidable()) {
 				return y + 1;
 			}
@@ -212,20 +259,19 @@ public class FallViewModule extends Module implements HudModule {
 		return -1;
 	}
 
-	private Color getDistanceColor(final float distance) {
+	private static int getDistanceColorArgb(final float distance) {
 		final float minDistance = 2.5f;
 		final float maxDistance = 20.0f;
 		final float normalized = MathHelper
 				.clamp_float((distance - minDistance) / (maxDistance - minDistance), 0.0f, 1.0f);
-		final int red = 255;
 		final int green = (int) (255 * (1.0f - normalized));
-		return new Color(red, green, 0);
+		return 0xFF000000 | (255 << 16) | (green << 8);
 	}
-
+	private static final float[] POW10 = {1f, 10f, 100f, 1000f};
 	private static float round(final float value, final int places) {
 		if (places < 0)
 			return value;
-		final float factor = (float) Math.pow(10, places);
+		final float factor = places < POW10.length ? POW10[places] : (float) Math.pow(10, places);
 		return Math.round(value * factor) / factor;
 	}
 
@@ -236,6 +282,7 @@ public class FallViewModule extends Module implements HudModule {
 	@Override
 	public void onSettingChanged(@Nullable final Setting<?> setting) {
 		handleHudSettingChanged(setting);
+		lastComputedTick = Integer.MIN_VALUE;
 		super.onSettingChanged(setting);
 	}
 
