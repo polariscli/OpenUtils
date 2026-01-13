@@ -16,8 +16,6 @@ import org.afterlike.openutils.module.api.setting.Setting;
 import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.game.RenderUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ArrayListModule extends Module implements HudModule {
 	private final Position position = new Position(5, 70);
@@ -38,13 +36,13 @@ public class ArrayListModule extends Module implements HudModule {
 	}
 
 	@Override
-	public void onSettingChanged(@Nullable final Setting<?> setting) {
+	public void onSettingChanged(final Setting<?> setting) {
 		handleHudSettingChanged(setting);
 		super.onSettingChanged(setting);
 	}
 
 	@EventHandler
-	private void onRenderOverlay(@NotNull final RenderOverlayEvent event) {
+	private void onRenderOverlay(final RenderOverlayEvent event) {
 		if (!ClientUtil.notNull())
 			return;
 		if (mc.currentScreen != null || mc.gameSettings.showDebugInfo)
@@ -84,17 +82,17 @@ public class ArrayListModule extends Module implements HudModule {
 	}
 
 	@Override
-	public @NotNull Position getHudPosition() {
+	public Position getHudPosition() {
 		return position;
 	}
 
 	@Override
-	public @NotNull BooleanSetting getHudEditSetting() {
+	public BooleanSetting getHudEditSetting() {
 		return editPosition;
 	}
 
 	@Override
-	public @NotNull String getHudPlaceholderText() {
+	public String getHudPlaceholderText() {
 		return "This is an-Array-List";
 	}
 

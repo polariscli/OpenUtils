@@ -19,7 +19,6 @@ import org.afterlike.openutils.module.api.setting.impl.ModeSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.game.BedWarsUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class ArmorAlertsModule extends Module {
 	private final DescriptionSetting desc;
@@ -44,7 +43,7 @@ public class ArmorAlertsModule extends Module {
 	}
 
 	@EventHandler
-	private void onPacket(@NotNull final ReceivePacketEvent event) {
+	private void onPacket(final ReceivePacketEvent event) {
 		if (!ClientUtil.notNull())
 			return;
 		if (GameModeUtil.getBedWarsStatus() != 3)
@@ -73,7 +72,7 @@ public class ArmorAlertsModule extends Module {
 		processArmor(player, stack);
 	}
 
-	private void processArmor(@NotNull final EntityPlayer player, @NotNull final ItemStack stack) {
+	private void processArmor(final EntityPlayer player, final ItemStack stack) {
 		final ArmorType armorType = getArmorType(stack);
 		if (armorType == ArmorType.NONE || armorType == ArmorType.LEATHER) {
 			return;
@@ -97,7 +96,7 @@ public class ArmorAlertsModule extends Module {
 		playPingIfEnabled(armorType);
 	}
 
-	private void playPingIfEnabled(@NotNull final ArmorType armorType) {
+	private void playPingIfEnabled(final ArmorType armorType) {
 		final String mode = pingSound.getValue();
 		if ("None".equalsIgnoreCase(mode)) {
 			return;
@@ -108,7 +107,7 @@ public class ArmorAlertsModule extends Module {
 		mc.thePlayer.playSound("random.orb", 1.0F, 1.0F);
 	}
 
-	private ArmorType getArmorType(@NotNull final ItemStack stack) {
+	private ArmorType getArmorType(final ItemStack stack) {
 		if (!(stack.getItem() instanceof ItemArmor)) {
 			return ArmorType.NONE;
 		}
@@ -128,7 +127,7 @@ public class ArmorAlertsModule extends Module {
 		return ArmorType.NONE;
 	}
 
-	private boolean isArmorEnabled(@NotNull final ArmorType armorType) {
+	private boolean isArmorEnabled(final ArmorType armorType) {
 		switch (armorType) {
 			case CHAINMAIL :
 				return detectChainmail.getValue();
@@ -141,7 +140,7 @@ public class ArmorAlertsModule extends Module {
 		}
 	}
 
-	private String getArmorMessage(@NotNull final ArmorType armorType) {
+	private String getArmorMessage(final ArmorType armorType) {
 		switch (armorType) {
 			case CHAINMAIL :
 				return "§fChainmail Armor";
@@ -154,7 +153,7 @@ public class ArmorAlertsModule extends Module {
 		}
 	}
 
-	private String getDistanceString(@NotNull final EntityPlayer player) {
+	private String getDistanceString(final EntityPlayer player) {
 		return new DecimalFormat("#").format(player.getDistanceToEntity(mc.thePlayer)) + "m";
 	}
 

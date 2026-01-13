@@ -5,7 +5,6 @@ import org.afterlike.openutils.module.api.Module;
 import org.afterlike.openutils.module.api.ModuleCategory;
 import org.afterlike.openutils.module.api.setting.Setting;
 import org.afterlike.openutils.module.api.setting.impl.ModeSetting;
-import org.jetbrains.annotations.Nullable;
 
 public class CapeModule extends Module {
 	private final ModeSetting cape;
@@ -22,7 +21,7 @@ public class CapeModule extends Module {
 	}
 
 	@Override
-	public void onSettingChanged(@Nullable Setting<?> setting) {
+	public void onSettingChanged(Setting<?> setting) {
 		setLocation();
 	}
 

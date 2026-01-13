@@ -10,10 +10,9 @@ import org.afterlike.openutils.module.api.ModuleCategory;
 import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
 import org.afterlike.openutils.platform.mixin.minecraft.client.settings.KeyBindingAccessor;
 import org.afterlike.openutils.util.client.ClientUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class NullMoveModule extends Module {
-	private final @NotNull DescriptionSetting description;
+	private final DescriptionSetting description;
 	public NullMoveModule() {
 		super("Null Move", ModuleCategory.MOVEMENT);
 		description = this.registerSetting(new DescriptionSetting(
@@ -21,7 +20,7 @@ public class NullMoveModule extends Module {
 	}
 
 	@EventHandler
-	private void onKeyPress(final @NotNull KeyPressEvent event) {
+	private void onKeyPress(final KeyPressEvent event) {
 		if (!ClientUtil.notNull())
 			return;
 		KeyBinding left = mc.gameSettings.keyBindLeft;
@@ -57,7 +56,7 @@ public class NullMoveModule extends Module {
 	}
 
 	@EventHandler
-	private void onTick(final @NotNull GameTickEvent event) {
+	private void onTick(final GameTickEvent event) {
 		if (!ClientUtil.notNull())
 			return;
 		if (event.getPhase() != EventPhase.PRE)
@@ -68,8 +67,7 @@ public class NullMoveModule extends Module {
 		apply(vert, mc.gameSettings.keyBindBack, mc.gameSettings.keyBindForward);
 	}
 
-	private void apply(final @NotNull InputAxis axis, final @NotNull KeyBinding negKey,
-			final @NotNull KeyBinding posKey) {
+	private void apply(final InputAxis axis, final KeyBinding negKey, final KeyBinding posKey) {
 		boolean neg = axis.neg;
 		boolean pos = axis.pos;
 		if (neg && pos) {
@@ -100,6 +98,6 @@ public class NullMoveModule extends Module {
 				neg = false;
 		}
 	}
-	private final @NotNull InputAxis horiz = new InputAxis();
-	private final @NotNull InputAxis vert = new InputAxis();
+	private final InputAxis horiz = new InputAxis();
+	private final InputAxis vert = new InputAxis();
 }

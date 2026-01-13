@@ -1,10 +1,9 @@
 package org.afterlike.openutils.gui.component;
 
 import net.minecraft.client.Minecraft;
-import org.jetbrains.annotations.NotNull;
 
 public class Component {
-	protected static final @NotNull Minecraft mc = Minecraft.getMinecraft();
+	protected static final Minecraft mc = Minecraft.getMinecraft();
 	public void render() {
 	}
 

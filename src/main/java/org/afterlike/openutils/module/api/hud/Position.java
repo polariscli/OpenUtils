@@ -1,7 +1,5 @@
 package org.afterlike.openutils.module.api.hud;
 
-import org.jetbrains.annotations.NotNull;
-
 public final class Position {
 	private final int defaultX;
 	private final int defaultY;
@@ -31,7 +29,7 @@ public final class Position {
 		setPosition(defaultX, defaultY);
 	}
 
-	public @NotNull Position copy() {
+	public Position copy() {
 		return new Position(this.x, this.y);
 	}
 }

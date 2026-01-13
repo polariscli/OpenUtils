@@ -2,12 +2,11 @@ package org.afterlike.openutils.util.game;
 
 import java.awt.*;
 import net.minecraft.client.gui.FontRenderer;
-import org.jetbrains.annotations.NotNull;
 
 public class RenderUtil {
-	public static void drawChromaText(@NotNull final String text, final char lineSplit, int x,
-			int y, final long speed, final long shift, final boolean shadow,
-			@NotNull final FontRenderer fontRenderer) {
+	public static void drawChromaText(final String text, final char lineSplit, int x, int y,
+			final long speed, final long shift, final boolean shadow,
+			final FontRenderer fontRenderer) {
 		final int bX = x;
 		int l = 0;
 		long r = 0L;

@@ -24,8 +24,6 @@ import org.afterlike.openutils.module.api.setting.impl.ModeSetting;
 import org.afterlike.openutils.module.api.setting.impl.NumberSetting;
 import org.afterlike.openutils.platform.mixin.minecraft.client.renderer.EntityRendererAccessor;
 import org.afterlike.openutils.util.client.ClientUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
@@ -77,7 +75,7 @@ public class DamageTagsModule extends Module {
 	}
 
 	@EventHandler
-	private void onTick(final @NotNull GameTickEvent event) {
+	private void onTick(final GameTickEvent event) {
 		if (event.getPhase() != EventPhase.POST)
 			return;
 		if (!ClientUtil.notNull())
@@ -153,7 +151,7 @@ public class DamageTagsModule extends Module {
 	}
 
 	@EventHandler
-	private void onRenderWorld(final @NotNull RenderWorldEvent event) {
+	private void onRenderWorld(final RenderWorldEvent event) {
 		if (!ClientUtil.notNull())
 			return;
 		if (tags.isEmpty())
@@ -199,7 +197,7 @@ public class DamageTagsModule extends Module {
 			final double relX = tag.x - viewX;
 			final double relY = tag.y - viewY;
 			final double relZ = tag.z - viewZ;
-			@Nullable final ScreenPos sp = projectToScreen(relX, relY, relZ, scaleFactor, displayH);
+			final ScreenPos sp = projectToScreen(relX, relY, relZ, scaleFactor, displayH);
 			if (sp == null || sp.z < 0.0 || sp.z >= MAX_SCREEN_Z)
 				continue;
 			final double lastDistance = tag.lastDistance;
@@ -237,8 +235,8 @@ public class DamageTagsModule extends Module {
 		mc.entityRenderer.setupOverlayRendering();
 	}
 
-	private @Nullable ScreenPos projectToScreen(final double relX, final double relY,
-			final double relZ, final int scaleFactor, final int displayHeight) {
+	private ScreenPos projectToScreen(final double relX, final double relY, final double relZ,
+			final int scaleFactor, final int displayHeight) {
 		try {
 			OBJECT_COORDS.clear();
 			if (!GLU.gluProject((float) relX, (float) relY, (float) relZ, MODEL_VIEW, PROJECTION,
@@ -284,12 +282,12 @@ public class DamageTagsModule extends Module {
 	}
 
 	@EventHandler
-	private void onWorldJoin(final @NotNull WorldLoadEvent event) {
+	private void onWorldJoin(final WorldLoadEvent event) {
 		clearAll();
 	}
 
 	@EventHandler
-	private void onResize(final @NotNull ResizeWindowEvent event) {
+	private void onResize(final ResizeWindowEvent event) {
 		cachedScaleFactor = -1;
 	}
 
@@ -324,7 +322,7 @@ public class DamageTagsModule extends Module {
 		return Math.round(value * factor) / factor;
 	}
 
-	private static @NotNull String formatDoubleStr(final double val) {
+	private static String formatDoubleStr(final double val) {
 		return val == (long) val ? Long.toString((long) val) : Double.toString(val);
 	}
 }

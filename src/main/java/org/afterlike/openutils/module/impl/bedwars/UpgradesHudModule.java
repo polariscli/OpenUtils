@@ -18,8 +18,6 @@ import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.client.TextUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
 import org.afterlike.openutils.util.game.RenderUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class UpgradesHudModule extends Module implements HudModule {
 	private final Position position = new Position(5, 100);
@@ -46,7 +44,7 @@ public class UpgradesHudModule extends Module implements HudModule {
 	}
 
 	@EventHandler
-	private void onChatReceived(@NotNull final ReceiveChatEvent event) {
+	private void onChatReceived(final ReceiveChatEvent event) {
 		if (!ClientUtil.notNull())
 			return;
 		if (GameModeUtil.getBedWarsStatus() != 3)
@@ -79,7 +77,7 @@ public class UpgradesHudModule extends Module implements HudModule {
 	}
 
 	@EventHandler
-	private void onRender(@NotNull final RenderOverlayEvent event) {
+	private void onRender(final RenderOverlayEvent event) {
 		if (!ClientUtil.notNull())
 			return;
 		if (mc.gameSettings.showDebugInfo)
@@ -97,7 +95,7 @@ public class UpgradesHudModule extends Module implements HudModule {
 	}
 
 	@EventHandler
-	private void onTick(final @NotNull GameTickEvent event) {
+	private void onTick(final GameTickEvent event) {
 		if (event.getPhase() != EventPhase.POST)
 			return;
 		if (GameModeUtil.getBedWarsStatus() != 3) {
@@ -105,7 +103,7 @@ public class UpgradesHudModule extends Module implements HudModule {
 		}
 	}
 
-	private @NotNull List<@NotNull String> buildLines() {
+	private List<String> buildLines() {
 		final List<String> lines = new ArrayList<>();
 		final String color = chroma.getValue() ? "§r" : "§r§f";
 		if (showTrap.getValue()) {
@@ -149,23 +147,23 @@ public class UpgradesHudModule extends Module implements HudModule {
 	}
 
 	@Override
-	public void onSettingChanged(@Nullable final Setting<?> setting) {
+	public void onSettingChanged(final Setting<?> setting) {
 		handleHudSettingChanged(setting);
 		super.onSettingChanged(setting);
 	}
 
 	@Override
-	public @NotNull Position getHudPosition() {
+	public Position getHudPosition() {
 		return position;
 	}
 
 	@Override
-	public @NotNull BooleanSetting getHudEditSetting() {
+	public BooleanSetting getHudEditSetting() {
 		return editPosition;
 	}
 
 	@Override
-	public @NotNull String getHudPlaceholderText() {
+	public String getHudPlaceholderText() {
 		return "Trap:-Sharp:-Prot:";
 	}
 

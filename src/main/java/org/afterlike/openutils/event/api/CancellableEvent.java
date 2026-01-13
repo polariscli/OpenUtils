@@ -1,6 +1,5 @@
 package org.afterlike.openutils.event.api;
 
-import org.jetbrains.annotations.NotNull;
 /*
  * Derived from AzuraClient’s EventBus
  * https://github.com/AzuraClient/Azura-Event-Bus
@@ -27,14 +26,13 @@ import org.jetbrains.annotations.NotNull;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 public class CancellableEvent implements Event {
 	private boolean cancelled;
 	public void setCancelled(final boolean cancelled) {
 		this.cancelled = cancelled;
 	}
 
-	public @NotNull Boolean isCancelled() {
+	public Boolean isCancelled() {
 		return cancelled;
 	}
 }

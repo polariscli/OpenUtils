@@ -4,16 +4,15 @@ import java.awt.*;
 import java.util.List;
 import org.afterlike.openutils.gui.component.Component;
 import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 public class DescriptionComponent extends Component {
 	private final int textColor = new Color(226, 83, 47).getRGB();
-	private final @NotNull DescriptionSetting description;
-	private final @NotNull ModuleComponent parent;
+	private final DescriptionSetting description;
+	private final ModuleComponent parent;
 	private int yOffset;
-	public DescriptionComponent(@NotNull final DescriptionSetting desc,
-			@NotNull final ModuleComponent parent, final int yOffset) {
+	public DescriptionComponent(final DescriptionSetting desc, final ModuleComponent parent,
+			final int yOffset) {
 		this.description = desc;
 		this.parent = parent;
 		this.yOffset = yOffset;

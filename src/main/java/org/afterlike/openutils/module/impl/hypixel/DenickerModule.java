@@ -16,8 +16,6 @@ import org.afterlike.openutils.module.api.Module;
 import org.afterlike.openutils.module.api.ModuleCategory;
 import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class DenickerModule extends Module {
 	private final BooleanSetting showFailed;
@@ -286,7 +284,7 @@ public class DenickerModule extends Module {
 		parsed.clear();
 	}
 
-	private void parseSkinData(@NotNull NetworkPlayerInfo info) {
+	private void parseSkinData(NetworkPlayerInfo info) {
 		// TODO: why is this not formatted????
 		final String displayName = info.getDisplayName() != null
 				? info.getDisplayName().getFormattedText()
@@ -318,15 +316,14 @@ public class DenickerModule extends Module {
 		}
 	}
 
-	private static @Nullable Property texturesProperty(
-			final @NotNull Multimap<String, Property> props) {
+	private static Property texturesProperty(final Multimap<String, Property> props) {
 		final Collection<Property> values = props.get("textures");
 		if (values == null || values.isEmpty())
 			return null;
 		return values.iterator().next();
 	}
 
-	private static @Nullable JsonObject decodeTexturePayload(final @Nullable String base64) {
+	private static JsonObject decodeTexturePayload(final String base64) {
 		if (base64 == null || base64.isEmpty())
 			return null;
 		try {
@@ -339,23 +336,21 @@ public class DenickerModule extends Module {
 		}
 	}
 
-	private static @Nullable JsonObject getObj(final @Nullable JsonObject parent,
-			final @NotNull String key) {
+	private static JsonObject getObj(final JsonObject parent, final String key) {
 		if (parent == null)
 			return null;
 		final JsonElement el = parent.get(key);
 		return (el != null && el.isJsonObject()) ? el.getAsJsonObject() : null;
 	}
 
-	private static @Nullable String getString(final @Nullable JsonObject parent,
-			final @NotNull String key) {
+	private static String getString(final JsonObject parent, final String key) {
 		if (parent == null)
 			return null;
 		final JsonElement el = parent.get(key);
 		return (el != null && el.isJsonPrimitive()) ? el.getAsString() : null;
 	}
 
-	private static @Nullable String lastPathSegment(final @NotNull String url) {
+	private static String lastPathSegment(final String url) {
 		final int idx = url.lastIndexOf('/');
 		if (idx < 0 || idx + 1 >= url.length())
 			return null;

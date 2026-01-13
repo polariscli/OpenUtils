@@ -15,12 +15,10 @@ import org.afterlike.openutils.module.impl.player.*;
 import org.afterlike.openutils.module.impl.render.*;
 import org.afterlike.openutils.module.impl.world.*;
 import org.afterlike.openutils.util.client.ClientUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class ModuleHandler {
-	private final @NotNull Minecraft mc = Minecraft.getMinecraft();
-	private final @NotNull List<@NotNull Module> moduleList = Collections
-			.synchronizedList(new ArrayList<>());
+	private final Minecraft mc = Minecraft.getMinecraft();
+	private final List<Module> moduleList = Collections.synchronizedList(new ArrayList<>());
 	public void initialize() {
 		OpenUtils.get().getEventBus().subscribe(this);
 		// movement
@@ -66,18 +64,18 @@ public class ModuleHandler {
 		this.register(new VPNStatusModule());
 	}
 
-	private void register(@NotNull final Module module) {
+	private void register(final Module module) {
 		moduleList.add(module);
 	}
 
-	public @NotNull List<@NotNull Module> getModules() {
+	public List<Module> getModules() {
 		synchronized (moduleList) {
 			return Collections.unmodifiableList(new ArrayList<>(moduleList));
 		}
 	}
 
-	public boolean isEnabled(@NotNull final Class<? extends Module> moduleClass) {
-		for (@NotNull final Module module : getEnabledModules()) {
+	public boolean isEnabled(final Class<? extends Module> moduleClass) {
+		for (final Module module : getEnabledModules()) {
 			if (moduleClass.isInstance(module)) {
 				return true;
 			}
@@ -86,7 +84,7 @@ public class ModuleHandler {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Module> @NotNull T getModuleClass(@NotNull final Class<T> moduleClass) {
+	public <T extends Module> T getModuleClass(final Class<T> moduleClass) {
 		synchronized (moduleList) {
 			for (Module module : moduleList) {
 				if (moduleClass.isInstance(module)) {
@@ -97,11 +95,10 @@ public class ModuleHandler {
 		throw new IllegalStateException("Module not registered: " + moduleClass.getName());
 	}
 
-	public @NotNull List<@NotNull Module> getModulesInCategory(
-			@NotNull final ModuleCategory category) {
-		final List<@NotNull Module> modulesInCategory = new ArrayList<>();
+	public List<Module> getModulesInCategory(final ModuleCategory category) {
+		final List<Module> modulesInCategory = new ArrayList<>();
 		synchronized (moduleList) {
-			for (@NotNull final Module module : moduleList) {
+			for (final Module module : moduleList) {
 				if (module.getCategory().equals(category)) {
 					modulesInCategory.add(module);
 				}
@@ -110,10 +107,10 @@ public class ModuleHandler {
 		return modulesInCategory;
 	}
 
-	public @NotNull List<@NotNull Module> getEnabledModules() {
-		final List<@NotNull Module> enabled = new ArrayList<>();
+	public List<Module> getEnabledModules() {
+		final List<Module> enabled = new ArrayList<>();
 		synchronized (moduleList) {
-			for (@NotNull final Module module : moduleList) {
+			for (final Module module : moduleList) {
 				if (module.isEnabled()) {
 					enabled.add(module);
 				}
@@ -123,7 +120,7 @@ public class ModuleHandler {
 	}
 
 	@EventHandler
-	private void onKeyPress(@NotNull final KeyPressEvent event) {
+	private void onKeyPress(final KeyPressEvent event) {
 		if (mc.currentScreen != null || !ClientUtil.notNull()) {
 			return;
 		}
@@ -132,7 +129,7 @@ public class ModuleHandler {
 			return;
 		}
 		final boolean pressed = event.isPressed();
-		for (@NotNull final Module module : getModules()) {
+		for (final Module module : getModules()) {
 			if (module.getKeybind() == keyCode) {
 				// Free Look requires keybind to be held
 				if (module instanceof FreeLookModule) {

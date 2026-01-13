@@ -9,7 +9,6 @@ import org.afterlike.openutils.event.impl.RenderWorldEvent;
 import org.afterlike.openutils.module.api.setting.impl.NumberSetting;
 import org.afterlike.openutils.module.impl.render.CameraModule;
 import org.afterlike.openutils.module.impl.render.FreeLookModule;
-import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -83,7 +82,7 @@ public class EntityRendererMixin {
 
 	@Inject(method = "renderWorldPass", at = @At("RETURN"))
 	private void ou$renderWorldPass(final int pass, final float partialTicks,
-			final long finishTimeNano, @NotNull final CallbackInfo ci) {
+			final long finishTimeNano, final CallbackInfo ci) {
 		OpenUtils.get().getEventBus().post(new RenderWorldEvent(partialTicks));
 	}
 }

@@ -4,15 +4,13 @@ import net.minecraft.client.Minecraft;
 import org.afterlike.openutils.gui.EditorGuiScreen;
 import org.afterlike.openutils.module.api.setting.Setting;
 import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public interface HudModule {
-	@NotNull Position getHudPosition();
+	Position getHudPosition();
 
-	@NotNull BooleanSetting getHudEditSetting();
+	BooleanSetting getHudEditSetting();
 
-	@NotNull String getHudPlaceholderText();
+	String getHudPlaceholderText();
 
 	default boolean useHudDropShadow() {
 		return true;
@@ -23,7 +21,7 @@ public interface HudModule {
 				.displayGuiScreen(new EditorGuiScreen(this, getHudPlaceholderText()));
 	}
 
-	default void handleHudSettingChanged(@Nullable final Setting<?> setting) {
+	default void handleHudSettingChanged(final Setting<?> setting) {
 		if (setting == null) {
 			return;
 		}

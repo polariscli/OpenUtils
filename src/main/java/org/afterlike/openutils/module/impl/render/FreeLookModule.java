@@ -7,13 +7,12 @@ import org.afterlike.openutils.module.api.ModuleCategory;
 import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
 import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class FreeLookModule extends Module {
-	private final @NotNull BooleanSetting lockYaw;
-	private final @NotNull BooleanSetting invertYaw;
-	private final @NotNull BooleanSetting lockPitch;
-	private final @NotNull BooleanSetting invertPitch;
+	private final BooleanSetting lockYaw;
+	private final BooleanSetting invertYaw;
+	private final BooleanSetting lockPitch;
+	private final BooleanSetting invertPitch;
 	private float cameraYaw = 0f;
 	private float cameraPitch = 0f;
 	private int prevPerspective = 0;
@@ -90,7 +89,7 @@ public class FreeLookModule extends Module {
 	}
 
 	@EventHandler
-	private void onWorldLoad(final @NotNull WorldLoadEvent event) {
+	private void onWorldLoad(final WorldLoadEvent event) {
 		if (isEnabled()) {
 			setEnabled(false);
 		}

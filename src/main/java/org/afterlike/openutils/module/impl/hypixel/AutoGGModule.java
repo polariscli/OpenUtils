@@ -13,12 +13,11 @@ import org.afterlike.openutils.module.api.setting.impl.ModeSetting;
 import org.afterlike.openutils.module.api.setting.impl.NumberSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.client.TextUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class AutoGGModule extends Module {
-	private final @NotNull NumberSetting delay;
-	private final @NotNull ModeSetting content;
-	private static final @NotNull List<Pattern> GAME_END_PATTERNS = new ArrayList<>();
+	private final NumberSetting delay;
+	private final ModeSetting content;
+	private static final List<Pattern> GAME_END_PATTERNS = new ArrayList<>();
 	static {
 		String[] regexes = new String[]{
 				"^ +1st Killer - ?\\[?\\w*\\+*\\]? \\w+ - \\d+(?: Kills?)?$",
@@ -49,7 +48,7 @@ public class AutoGGModule extends Module {
 	}
 
 	@EventHandler
-	private void onChat(final @NotNull ReceiveChatEvent event) {
+	private void onChat(final ReceiveChatEvent event) {
 		String msg = event.getMessage();
 		String stripped = TextUtil.stripColorCodes(msg);
 		for (Pattern p : GAME_END_PATTERNS) {

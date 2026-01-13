@@ -3,7 +3,6 @@ package org.afterlike.openutils.event.handler;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import org.afterlike.openutils.event.api.Event;
-import org.jetbrains.annotations.NotNull;
 /*
  * Derived from AzuraClient’s EventBus
  * https://github.com/AzuraClient/Azura-Event-Bus
@@ -32,10 +31,10 @@ import org.jetbrains.annotations.NotNull;
  */
 
 public final class ListenerHandler<T extends Event> {
-	private final @NotNull Type type;
-	private final @NotNull Listener<T> listener;
-	private final @NotNull Class<?> typeClass;
-	public ListenerHandler(@NotNull final Type type, @NotNull final Listener<T> listener) {
+	private final Type type;
+	private final Listener<T> listener;
+	private final Class<?> typeClass;
+	public ListenerHandler(final Type type, final Listener<T> listener) {
 		this.type = type;
 		this.listener = listener;
 		if (type instanceof Class<?>)
@@ -47,17 +46,17 @@ public final class ListenerHandler<T extends Event> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public void call(final @NotNull Event event) {
+	public void call(final Event event) {
 		if (!this.typeClass.equals(event.getClass()) && !this.typeClass.equals(Event.class))
 			return;
 		this.listener.call((T) event);
 	}
 
-	public @NotNull Class<?> getTypeClass() {
+	public Class<?> getTypeClass() {
 		return typeClass;
 	}
 
-	public @NotNull Type getType() {
+	public Type getType() {
 		return type;
 	}
 }

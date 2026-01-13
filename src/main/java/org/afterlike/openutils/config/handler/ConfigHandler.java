@@ -25,16 +25,14 @@ import org.afterlike.openutils.module.api.Module;
 import org.afterlike.openutils.module.api.hud.HudModule;
 import org.afterlike.openutils.module.api.hud.Position;
 import org.afterlike.openutils.module.api.setting.Setting;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ConfigHandler {
-	private static final @NotNull Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-	private static final @NotNull Type CONFIG_TYPE = new TypeToken<ConfigData>() {
+	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+	private static final Type CONFIG_TYPE = new TypeToken<ConfigData>() {
 	}.getType();
-	private static @Nullable ConfigData cachedPanels;
+	private static ConfigData cachedPanels;
 	private boolean loading = false;
-	private static @NotNull Path getConfigPath() {
+	private static Path getConfigPath() {
 		final Minecraft mc = Minecraft.getMinecraft();
 		final Path dir = Paths.get(mc.mcDataDir.getAbsolutePath(), "config", "openutils");
 		try {
@@ -62,9 +60,9 @@ public class ConfigHandler {
 		}
 	}
 
-	private void applyModules(@NotNull final ConfigData data) {
-		for (@NotNull final Module module : OpenUtils.get().getModuleHandler().getModules()) {
-			@Nullable final ModuleEntry entry = data.modules.get(module.getName());
+	private void applyModules(final ConfigData data) {
+		for (final Module module : OpenUtils.get().getModuleHandler().getModules()) {
+			final ModuleEntry entry = data.modules.get(module.getName());
 			if (entry == null)
 				continue;
 			if (entry.enabled && !module.isEnabled()) {
@@ -72,7 +70,7 @@ public class ConfigHandler {
 			} else if (!entry.enabled && module.isEnabled()) {
 				module.setEnabled(false);
 			}
-			@Nullable final Map<String, Object> settings = entry.settings;
+			final Map<String, Object> settings = entry.settings;
 			if (settings == null)
 				continue;
 			for (final Setting<?> setting : module.getSettings()) {
@@ -88,12 +86,12 @@ public class ConfigHandler {
 		}
 	}
 
-	public void applyPanels(@NotNull final List<@NotNull CategoryPanel> panels) {
+	public void applyPanels(final List<CategoryPanel> panels) {
 		if (cachedPanels == null)
 			return;
-		@NotNull final Map<String, PanelEntry> panelMap = cachedPanels.panels;
-		for (@NotNull final CategoryPanel panel : panels) {
-			@Nullable final PanelEntry entry = panelMap.get(panel.getCategory().name());
+		final Map<String, PanelEntry> panelMap = cachedPanels.panels;
+		for (final CategoryPanel panel : panels) {
+			final PanelEntry entry = panelMap.get(panel.getCategory().name());
 			if (entry == null)
 				continue;
 			panel.setX(entry.x);
@@ -134,7 +132,7 @@ public class ConfigHandler {
 			data.panels = new HashMap<>();
 		}
 		if (ClickGuiScreen.categoryPanels != null) {
-			for (@NotNull final CategoryPanel panel : ClickGuiScreen.categoryPanels) {
+			for (final CategoryPanel panel : ClickGuiScreen.categoryPanels) {
 				final PanelEntry entry = new PanelEntry();
 				entry.x = panel.getX();
 				entry.y = panel.getY();

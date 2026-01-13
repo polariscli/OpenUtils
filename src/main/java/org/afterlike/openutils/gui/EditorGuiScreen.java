@@ -11,7 +11,6 @@ import org.afterlike.openutils.OpenUtils;
 import org.afterlike.openutils.module.api.hud.HudModule;
 import org.afterlike.openutils.module.api.hud.Position;
 import org.afterlike.openutils.util.game.RenderUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class EditorGuiScreen extends GuiScreen {
 	private final HudModule module;
@@ -26,7 +25,7 @@ public class EditorGuiScreen extends GuiScreen {
 	private int startDragY = 0;
 	private int lastMouseX = 0;
 	private int lastMouseY = 0;
-	public EditorGuiScreen(@NotNull final HudModule module, @NotNull final String placeholderText) {
+	public EditorGuiScreen(final HudModule module, final String placeholderText) {
 		this.module = module;
 		this.placeholderText = placeholderText;
 	}
@@ -63,8 +62,7 @@ public class EditorGuiScreen extends GuiScreen {
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
-	private void drawSampleText(@NotNull final FontRenderer fontRenderer, final int x,
-			final int startY) {
+	private void drawSampleText(final FontRenderer fontRenderer, final int x, final int startY) {
 		int y = startY;
 		for (final String line : placeholderText.split("-|\\n")) {
 			fontRenderer.drawString(line, x, y, Color.white.getRGB(), module.useHudDropShadow());

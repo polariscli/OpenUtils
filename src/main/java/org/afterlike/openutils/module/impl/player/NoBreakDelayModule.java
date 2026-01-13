@@ -9,7 +9,6 @@ import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
 import org.afterlike.openutils.module.api.setting.impl.NumberSetting;
 import org.afterlike.openutils.platform.mixin.minecraft.client.multiplayer.PlayerControllerMPAccessor;
 import org.afterlike.openutils.util.client.ClientUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class NoBreakDelayModule extends Module {
 	private final DescriptionSetting description;
@@ -22,7 +21,7 @@ public class NoBreakDelayModule extends Module {
 	}
 
 	@EventHandler
-	private void onTick(final @NotNull GameTickEvent event) {
+	private void onTick(final GameTickEvent event) {
 		if (event.getPhase() != EventPhase.PRE)
 			return;
 		if (!ClientUtil.notNull())

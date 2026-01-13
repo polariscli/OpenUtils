@@ -10,12 +10,11 @@ import org.afterlike.openutils.gui.component.impl.BooleanComponent;
 import org.afterlike.openutils.gui.component.impl.ModuleComponent;
 import org.afterlike.openutils.module.api.Module;
 import org.afterlike.openutils.module.api.ModuleCategory;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 public class CategoryPanel {
-	private final @NotNull ArrayList<@NotNull Component> components;
-	private final @NotNull ModuleCategory category;
+	private final ArrayList<Component> components;
+	private final ModuleCategory category;
 	private boolean expanded;
 	private int width;
 	private int y;
@@ -25,7 +24,7 @@ public class CategoryPanel {
 	private int dragOffsetX;
 	private int dragOffsetY;
 	private final int chromaSpeed;
-	public CategoryPanel(@NotNull final ModuleCategory category) {
+	public CategoryPanel(final ModuleCategory category) {
 		this.components = new ArrayList<>();
 		this.category = category;
 		this.width = 92;
@@ -38,15 +37,15 @@ public class CategoryPanel {
 		this.dragging = false;
 		this.chromaSpeed = 3;
 		int offsetY = this.headerHeight + 3;
-		for (@NotNull final Module module : OpenUtils.get().getModuleHandler()
+		for (final Module module : OpenUtils.get().getModuleHandler()
 				.getModulesInCategory(this.category)) {
-			@NotNull final ModuleComponent moduleComponent = new ModuleComponent(module, this, offsetY);
+			final ModuleComponent moduleComponent = new ModuleComponent(module, this, offsetY);
 			this.components.add(moduleComponent);
 			offsetY += 16;
 		}
 	}
 
-	public @NotNull ArrayList<@NotNull Component> getComponents() {
+	public ArrayList<Component> getComponents() {
 		return this.components;
 	}
 
@@ -75,11 +74,11 @@ public class CategoryPanel {
 		this.expanded = expanded;
 	}
 
-	public void renderPanel(@NotNull final FontRenderer renderer) {
+	public void renderPanel(final FontRenderer renderer) {
 		this.width = 92;
 		if (!this.components.isEmpty() && this.expanded) {
 			int h = 0;
-			for (@NotNull final Component c : this.components) {
+			for (final Component c : this.components) {
 				h += c.getHeight();
 			}
 			final int bg = new Color(0, 0, 0, 110).getRGB();
@@ -97,7 +96,7 @@ public class CategoryPanel {
 				Color.white.getRGB(), false);
 		GL11.glPopMatrix();
 		if (this.expanded && !this.components.isEmpty()) {
-			for (@NotNull final Component component : this.components) {
+			for (final Component component : this.components) {
 				component.render();
 			}
 		}
@@ -105,7 +104,7 @@ public class CategoryPanel {
 
 	public void layoutComponents() {
 		int offsetY = this.headerHeight + 3;
-		for (@NotNull final Component component : this.components) {
+		for (final Component component : this.components) {
 			component.setOffset(offsetY);
 			offsetY += component.getHeight();
 		}
@@ -123,7 +122,7 @@ public class CategoryPanel {
 		return this.width;
 	}
 
-	public @NotNull ModuleCategory getCategory() {
+	public ModuleCategory getCategory() {
 		return this.category;
 	}
 

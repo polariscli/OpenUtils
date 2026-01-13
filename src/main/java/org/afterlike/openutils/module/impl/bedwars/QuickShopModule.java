@@ -14,10 +14,9 @@ import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.client.TextUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class QuickShopModule extends Module {
-	private final @NotNull DescriptionSetting desc;
+	private final DescriptionSetting desc;
 	public QuickShopModule() {
 		super("Quick Shop", ModuleCategory.BEDWARS);
 		desc = this.registerSetting(new DescriptionSetting(
@@ -33,7 +32,7 @@ public class QuickShopModule extends Module {
 			Arrays.asList("quick buy", "upgrades & traps", "blocks", "melee", "armor", "tools",
 					"ranged", "potions", "utility", "rotating items"));
 	@EventHandler
-	private void onWindowClick(final @NotNull WindowClickEvent event) {
+	private void onWindowClick(final WindowClickEvent event) {
 		if (!ClientUtil.notNull())
 			return;
 		if (GameModeUtil.getBedWarsStatus() != 3)

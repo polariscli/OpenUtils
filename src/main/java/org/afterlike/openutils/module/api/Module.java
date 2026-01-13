@@ -6,18 +6,16 @@ import net.minecraft.client.Minecraft;
 import org.afterlike.openutils.OpenUtils;
 import org.afterlike.openutils.module.api.setting.Setting;
 import org.afterlike.openutils.module.api.setting.impl.KeybindSetting;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
 public class Module {
-	protected static final @NotNull Minecraft mc = Minecraft.getMinecraft();
-	protected final @NotNull List<@NotNull Setting<?>> settings;
-	private final @NotNull String name;
-	private final @NotNull ModuleCategory category;
+	protected static final Minecraft mc = Minecraft.getMinecraft();
+	protected final List<Setting<?>> settings;
+	private final String name;
+	private final ModuleCategory category;
 	private boolean enabled;
-	private final @NotNull KeybindSetting keybindSetting;
-	public Module(@NotNull String name, @NotNull ModuleCategory category, int keyCode) {
+	private final KeybindSetting keybindSetting;
+	public Module(String name, ModuleCategory category, int keyCode) {
 		this.name = name;
 		this.category = category;
 		this.enabled = false;
@@ -26,21 +24,21 @@ public class Module {
 		registerSetting(this.keybindSetting);
 	}
 
-	public Module(@NotNull String name, @NotNull ModuleCategory category) {
+	public Module(String name, ModuleCategory category) {
 		this(name, category, Keyboard.KEY_NONE);
 	}
 
-	protected final <T extends Setting<?>> T registerSetting(@NotNull T setting) {
+	protected final <T extends Setting<?>> T registerSetting(T setting) {
 		this.settings.add(setting);
 		return setting;
 	}
 
-	public @NotNull List<@NotNull Setting<?>> getSettings() {
+	public List<Setting<?>> getSettings() {
 		return this.settings;
 	}
 
 	@SuppressWarnings("unchecked")
-	private <S extends Setting<?>> @Nullable S getSetting(String name) {
+	private <S extends Setting<?>> S getSetting(String name) {
 		for (Setting<?> setting : settings) {
 			if (setting.getName().equalsIgnoreCase(name)) {
 				return (S) setting;
@@ -49,8 +47,7 @@ public class Module {
 		return null;
 	}
 
-	public <S extends Setting<?>> @Nullable S getSetting(@NotNull final String name,
-			@NotNull final Class<S> type) {
+	public <S extends Setting<?>> S getSetting(final String name, final Class<S> type) {
 		final Setting<?> setting = getSetting(name);
 		if (type.isInstance(setting)) {
 			return type.cast(setting);
@@ -80,11 +77,11 @@ public class Module {
 		return enabled;
 	}
 
-	public @NotNull String getName() {
+	public String getName() {
 		return name;
 	}
 
-	public @NotNull ModuleCategory getCategory() {
+	public ModuleCategory getCategory() {
 		return category;
 	}
 
@@ -96,7 +93,7 @@ public class Module {
 		keybindSetting.setValue(keybind);
 	}
 
-	public @NotNull KeybindSetting getKeybindSetting() {
+	public KeybindSetting getKeybindSetting() {
 		return keybindSetting;
 	}
 
@@ -107,7 +104,7 @@ public class Module {
 	protected void onDisable() {
 	}
 
-	public void onSettingChanged(@Nullable Setting<?> setting) {
+	public void onSettingChanged(Setting<?> setting) {
 		OpenUtils.get().getConfigHandler().saveConfiguration();
 	}
 }

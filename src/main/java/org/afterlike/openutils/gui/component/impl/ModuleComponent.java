@@ -15,19 +15,17 @@ import org.afterlike.openutils.module.api.setting.impl.ModeSetting;
 import org.afterlike.openutils.module.api.setting.impl.NumberSetting;
 import org.afterlike.openutils.module.impl.client.GuiModule;
 import org.afterlike.openutils.module.impl.render.FreeLookModule;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 public class ModuleComponent extends Component {
 	private final int enabledTextColor = new Color(0, 85, 255).getRGB();
 	private final int enabledFillColor = new Color(154, 2, 255).getRGB();
-	public final @NotNull Module module;
-	public final @NotNull CategoryPanel panel;
+	public final Module module;
+	public final CategoryPanel panel;
 	public int yOffset;
-	private final @NotNull List<@NotNull Component> settingComponents;
+	private final List<Component> settingComponents;
 	public boolean expandedSettings;
-	public ModuleComponent(@NotNull final Module module, @NotNull final CategoryPanel panel,
-			final int yOffset) {
+	public ModuleComponent(final Module module, final CategoryPanel panel, final int yOffset) {
 		this.module = module;
 		this.panel = panel;
 		this.yOffset = yOffset;
@@ -35,7 +33,7 @@ public class ModuleComponent extends Component {
 		this.expandedSettings = false;
 		int y = yOffset + 12;
 		if (!module.getSettings().isEmpty()) {
-			for (@NotNull final Setting<?> setting : module.getSettings()) {
+			for (final Setting<?> setting : module.getSettings()) {
 				if (setting instanceof NumberSetting) {
 					final NumberSetting numberSetting = (NumberSetting) setting;
 					final SliderComponent slider = new SliderComponent(numberSetting, this, y);
@@ -68,7 +66,7 @@ public class ModuleComponent extends Component {
 	public void setOffset(final int yOffset) {
 		this.yOffset = yOffset;
 		int y = this.yOffset + 16;
-		for (@NotNull final Component comp : this.settingComponents) {
+		for (final Component comp : this.settingComponents) {
 			comp.setOffset(y);
 			y += comp.getHeight();
 		}
@@ -151,7 +149,7 @@ public class ModuleComponent extends Component {
 				this.panel.getY() + this.yOffset + 4, buttonColor);
 		GL11.glPopMatrix();
 		if (this.expandedSettings && !this.settingComponents.isEmpty()) {
-			for (@NotNull final Component component : this.settingComponents) {
+			for (final Component component : this.settingComponents) {
 				component.render();
 			}
 		}
@@ -163,7 +161,7 @@ public class ModuleComponent extends Component {
 			return 16;
 		} else {
 			int h = 16;
-			for (@NotNull final Component component : this.settingComponents) {
+			for (final Component component : this.settingComponents) {
 				h += component.getHeight();
 			}
 			return h;
@@ -173,7 +171,7 @@ public class ModuleComponent extends Component {
 	@Override
 	public void update(final int x, final int y) {
 		if (!this.settingComponents.isEmpty()) {
-			for (@NotNull final Component c : this.settingComponents) {
+			for (final Component c : this.settingComponents) {
 				c.update(x, y);
 			}
 		}
@@ -191,27 +189,27 @@ public class ModuleComponent extends Component {
 			this.expandedSettings = !this.expandedSettings;
 			this.panel.layoutComponents();
 		}
-		for (@NotNull final Component c : this.settingComponents) {
+		for (final Component c : this.settingComponents) {
 			c.onClick(x, y, button);
 		}
 	}
 
 	@Override
 	public void onMouseRelease(final int x, final int y, final int m) {
-		for (@NotNull final Component c : this.settingComponents) {
+		for (final Component c : this.settingComponents) {
 			c.onMouseRelease(x, y, m);
 		}
 	}
 
 	@Override
 	public void onKeyTyped(final char key, final int k) {
-		for (@NotNull final Component c : this.settingComponents) {
+		for (final Component c : this.settingComponents) {
 			c.onKeyTyped(key, k);
 		}
 	}
 
 	public boolean isBinding() {
-		for (@NotNull final Component c : this.settingComponents) {
+		for (final Component c : this.settingComponents) {
 			if (c instanceof KeybindComponent && ((KeybindComponent) c).isBinding()) {
 				return true;
 			}

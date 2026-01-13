@@ -4,19 +4,18 @@ import java.awt.*;
 import org.afterlike.openutils.gui.component.Component;
 import org.afterlike.openutils.module.api.Module;
 import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.opengl.GL11;
 
 public class BooleanComponent extends Component {
 	private final int enabledColor = new Color(20, 255, 0).getRGB();
-	private final @NotNull Module module;
-	private final @NotNull BooleanSetting setting;
-	private final @NotNull ModuleComponent parent;
+	private final Module module;
+	private final BooleanSetting setting;
+	private final ModuleComponent parent;
 	private int yOffset;
 	private int x;
 	private int y;
-	public BooleanComponent(@NotNull final Module module, @NotNull final BooleanSetting setting,
-			@NotNull final ModuleComponent parent, final int yOffset) {
+	public BooleanComponent(final Module module, final BooleanSetting setting,
+			final ModuleComponent parent, final int yOffset) {
 		this.module = module;
 		this.setting = setting;
 		this.parent = parent;

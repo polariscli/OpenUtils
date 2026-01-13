@@ -7,7 +7,6 @@ import org.afterlike.openutils.module.api.Module;
 import org.afterlike.openutils.module.api.ModuleCategory;
 import org.afterlike.openutils.platform.mixin.minecraft.client.settings.KeyBindingAccessor;
 import org.afterlike.openutils.util.client.ClientUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class SprintModule extends Module {
 	public SprintModule() {
@@ -15,7 +14,7 @@ public class SprintModule extends Module {
 	}
 
 	@EventHandler
-	private void onTick(final @NotNull GameTickEvent event) {
+	private void onTick(final GameTickEvent event) {
 		if (event.getPhase() != EventPhase.PRE)
 			return;
 		if (!ClientUtil.notNull())

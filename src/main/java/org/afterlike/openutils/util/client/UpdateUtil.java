@@ -9,11 +9,9 @@ import java.util.concurrent.CompletableFuture;
 import org.afterlike.openutils.OpenUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class UpdateUtil {
-	private static final @NotNull Logger logger = LogManager.getLogger(UpdateUtil.class);
+	private static final Logger logger = LogManager.getLogger(UpdateUtil.class);
 	private static final String API_URL = "https://api.github.com/repos/polariscli/OpenUtils/releases/latest";
 	private static volatile String latest = null;
 	public static void checkAsync() {
@@ -42,7 +40,7 @@ public class UpdateUtil {
 		}
 	}
 
-	public static @Nullable String getLatest() {
+	public static String getLatest() {
 		return latest;
 	}
 }

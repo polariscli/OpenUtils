@@ -8,7 +8,6 @@ import org.afterlike.openutils.module.api.ModuleCategory;
 import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
 import org.afterlike.openutils.platform.mixin.minecraft.entity.EntityLivingBaseAccessor;
 import org.afterlike.openutils.util.client.ClientUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class NoJumpDelayModule extends Module {
 	private final BooleanSetting onlyWhileMoving;
@@ -18,7 +17,7 @@ public class NoJumpDelayModule extends Module {
 	}
 
 	@EventHandler
-	private void onTick(final @NotNull GameTickEvent event) {
+	private void onTick(final GameTickEvent event) {
 		if (event.getPhase() != EventPhase.PRE)
 			return;
 		if (!ClientUtil.notNull())

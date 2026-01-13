@@ -4,31 +4,30 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import org.afterlike.openutils.OpenUtils;
 import org.afterlike.openutils.module.impl.client.DebugModule;
-import org.jetbrains.annotations.NotNull;
 
 public class ClientUtil {
-	private static final @NotNull Minecraft mc = Minecraft.getMinecraft();
-	private static final @NotNull String prefix = "§8§l» §r";
-	public static void sendMessage(@NotNull final String message) {
+	private static final Minecraft mc = Minecraft.getMinecraft();
+	private static final String prefix = "§8§l» §r";
+	public static void sendMessage(final String message) {
 		if (notNull()) {
 			mc.thePlayer.addChatMessage(
 					new ChatComponentText(TextUtil.replaceColorCodes(prefix + message)));
 		}
 	}
 
-	public static void sendChatComponent(@NotNull final ChatComponentText message) {
+	public static void sendChatComponent(final ChatComponentText message) {
 		if (notNull()) {
 			mc.thePlayer.addChatMessage(message);
 		}
 	}
 
-	public static void sendDebugMessage(@NotNull final String message) {
+	public static void sendDebugMessage(final String message) {
 		if (notNull() && OpenUtils.get().getModuleHandler().isEnabled(DebugModule.class)) {
 			sendMessage("&c[DEBUG] &r" + message);
 		}
 	}
 
-	public static void sendMessageAsPlayer(@NotNull final String message) {
+	public static void sendMessageAsPlayer(final String message) {
 		if (notNull()) {
 			mc.thePlayer.sendChatMessage(message);
 		}
@@ -38,7 +37,7 @@ public class ClientUtil {
 		return mc.thePlayer != null && mc.theWorld != null;
 	}
 
-	public static @NotNull String getPrefix() {
+	public static String getPrefix() {
 		return prefix;
 	}
 }

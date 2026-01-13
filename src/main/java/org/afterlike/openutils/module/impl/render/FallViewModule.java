@@ -21,8 +21,6 @@ import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
 import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
 import org.afterlike.openutils.module.api.setting.impl.NumberSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class FallViewModule extends Module implements HudModule {
 	private static final int WHITE_ARGB = 0xFFFFFFFF;
@@ -102,7 +100,7 @@ public class FallViewModule extends Module implements HudModule {
 	}
 
 	@EventHandler
-	private void onTick(@NotNull final GameTickEvent event) {
+	private void onTick(final GameTickEvent event) {
 		if (!canRunLogic())
 			return;
 		final int tick = mc.thePlayer.ticksExisted;
@@ -113,7 +111,7 @@ public class FallViewModule extends Module implements HudModule {
 	}
 
 	@EventHandler
-	private void onRender(@NotNull final RenderOverlayEvent event) {
+	private void onRender(final RenderOverlayEvent event) {
 		if (!canRunLogic())
 			return;
 		final int tick = mc.thePlayer.ticksExisted;
@@ -275,29 +273,29 @@ public class FallViewModule extends Module implements HudModule {
 		return Math.round(value * factor) / factor;
 	}
 
-	private static @NotNull String formatNumber(final float val) {
+	private static String formatNumber(final float val) {
 		return val == (long) val ? Long.toString((long) val) : Float.toString(val);
 	}
 
 	@Override
-	public void onSettingChanged(@Nullable final Setting<?> setting) {
+	public void onSettingChanged(final Setting<?> setting) {
 		handleHudSettingChanged(setting);
 		lastComputedTick = Integer.MIN_VALUE;
 		super.onSettingChanged(setting);
 	}
 
 	@Override
-	public @NotNull Position getHudPosition() {
+	public Position getHudPosition() {
 		return position;
 	}
 
 	@Override
-	public @NotNull BooleanSetting getHudEditSetting() {
+	public BooleanSetting getHudEditSetting() {
 		return editPosition;
 	}
 
 	@Override
-	public @NotNull String getHudPlaceholderText() {
+	public String getHudPlaceholderText() {
 		return "§c5❤";
 	}
 

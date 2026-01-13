@@ -19,7 +19,6 @@ import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.game.BedWarsUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class UpgradeAlertsModule extends Module {
 	private final DescriptionSetting desc;
@@ -45,7 +44,7 @@ public class UpgradeAlertsModule extends Module {
 	}
 
 	@EventHandler
-	private void onPacket(@NotNull final ReceivePacketEvent event) {
+	private void onPacket(final ReceivePacketEvent event) {
 		if (!ClientUtil.notNull())
 			return;
 		if (GameModeUtil.getBedWarsStatus() != 3)
@@ -81,7 +80,7 @@ public class UpgradeAlertsModule extends Module {
 		}
 	}
 
-	private void notifyUpgrade(@NotNull final String teamKey, @NotNull final String upgrade) {
+	private void notifyUpgrade(final String teamKey, final String upgrade) {
 		ClientUtil.sendMessage(teamKey + " Team §7purchased §b" + upgrade);
 		if (pingSound.getValue()) {
 			mc.thePlayer.playSound("random.orb", 1.0F, 1.0F);

@@ -26,7 +26,6 @@ import org.afterlike.openutils.module.api.setting.impl.ModeSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.game.BedWarsUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
-import org.jetbrains.annotations.NotNull;
 
 // TODO: we should probably rewrite at some point...
 public class ItemAlertsModule extends Module {
@@ -142,13 +141,13 @@ public class ItemAlertsModule extends Module {
 				MatchType.NAME_SUBSTRING, "snowman"));
 	}
 
-	private void addRule(@NotNull final ItemRule rule) {
+	private void addRule(final ItemRule rule) {
 		rules.add(rule);
 		rulesByItem.put(rule.item, rule);
 	}
 
 	@EventHandler
-	private void onPacket(@NotNull final ReceivePacketEvent event) {
+	private void onPacket(final ReceivePacketEvent event) {
 		if (!ClientUtil.notNull()) {
 			return;
 		}
@@ -180,7 +179,7 @@ public class ItemAlertsModule extends Module {
 		processItem(player, stack);
 	}
 
-	private void processItem(@NotNull final EntityPlayer player, @NotNull final ItemStack stack) {
+	private void processItem(final EntityPlayer player, final ItemStack stack) {
 		final Item item = getEffectiveItem(stack);
 		final ItemRule rule = rulesByItem.get(item);
 		if (rule == null)
@@ -202,7 +201,7 @@ public class ItemAlertsModule extends Module {
 		state.lastAlertTime = now;
 	}
 
-	private Item getEffectiveItem(@NotNull final ItemStack stack) {
+	private Item getEffectiveItem(final ItemStack stack) {
 		final Item rawItem = stack.getItem();
 		final String displayName = stack.getDisplayName().toLowerCase(Locale.getDefault());
 		if (rawItem instanceof ItemPotion) {
@@ -221,8 +220,8 @@ public class ItemAlertsModule extends Module {
 		return rawItem;
 	}
 
-	private String createItemMessage(@NotNull final EntityPlayer player, @NotNull final Item item,
-			@NotNull final ItemStack stack) {
+	private String createItemMessage(final EntityPlayer player, final Item item,
+			final ItemStack stack) {
 		if (item == Items.bow && stack.isItemEnchanted()) {
 			final NBTTagList enchantments = stack.getEnchantmentTagList();
 			final int enchantmentCount = enchantments != null ? enchantments.tagCount() : 0;
@@ -244,12 +243,12 @@ public class ItemAlertsModule extends Module {
 				+ EnumChatFormatting.GRAY + ")";
 	}
 
-	private String getDistanceString(@NotNull final EntityPlayer player) {
+	private String getDistanceString(final EntityPlayer player) {
 		final double distance = player.getDistanceToEntity(mc.thePlayer);
 		return new DecimalFormat("#").format(distance) + "m";
 	}
 
-	private boolean shouldPlaySound(@NotNull final Item item) {
+	private boolean shouldPlaySound(final Item item) {
 		final String mode = pingSound.getValue();
 		if ("None".equalsIgnoreCase(mode)) {
 			return false;

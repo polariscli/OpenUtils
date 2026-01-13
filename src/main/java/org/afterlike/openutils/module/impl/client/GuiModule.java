@@ -7,7 +7,6 @@ import org.afterlike.openutils.module.api.ModuleCategory;
 import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
 import org.afterlike.openutils.module.api.setting.impl.ModeSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
 
 public class GuiModule extends Module {
@@ -23,7 +22,7 @@ public class GuiModule extends Module {
 	@Override
 	protected void onEnable() {
 		if (ClientUtil.notNull() && !(mc.currentScreen instanceof ClickGuiScreen)) {
-			@NotNull final ClickGuiScreen screen = OpenUtils.get().getClickGuiScreen();
+			final ClickGuiScreen screen = OpenUtils.get().getClickGuiScreen();
 			mc.displayGuiScreen(screen);
 		}
 		this.setEnabled(false);

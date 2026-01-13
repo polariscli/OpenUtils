@@ -3,15 +3,12 @@ package org.afterlike.openutils.module.api.setting.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import org.afterlike.openutils.module.api.setting.Setting;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class NumberSetting extends Setting<Double> {
 	private final double max;
 	private final double min;
 	private final double step;
-	public NumberSetting(@NotNull String name, double defaultValue, double min, double max,
-			double step) {
+	public NumberSetting(String name, double defaultValue, double min, double max, double step) {
 		super(name);
 		this.min = min;
 		this.max = max;
@@ -25,7 +22,7 @@ public class NumberSetting extends Setting<Double> {
 	}
 
 	@Override
-	public void setValue(@NotNull Double newValue) {
+	public void setValue(Double newValue) {
 		newValue = clamp(newValue, min, max);
 		newValue = snap(newValue, step);
 		this.value = newValue;
@@ -56,12 +53,12 @@ public class NumberSetting extends Setting<Double> {
 	}
 
 	@Override
-	public @NotNull Object serializeValue() {
+	public Object serializeValue() {
 		return value;
 	}
 
 	@Override
-	public void deserializeValue(@Nullable Object raw) {
+	public void deserializeValue(Object raw) {
 		if (raw instanceof Number) {
 			setValue(((Number) raw).doubleValue());
 		}

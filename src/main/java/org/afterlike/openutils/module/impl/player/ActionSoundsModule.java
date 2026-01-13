@@ -10,12 +10,11 @@ import org.afterlike.openutils.module.api.ModuleCategory;
 import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
 import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class ActionSoundsModule extends Module {
-	private final @NotNull DescriptionSetting desc;
-	private final @NotNull BooleanSetting blocked;
-	private final @NotNull BooleanSetting crit;
+	private final DescriptionSetting desc;
+	private final BooleanSetting blocked;
+	private final BooleanSetting crit;
 	public ActionSoundsModule() {
 		super("Action Sounds", ModuleCategory.PLAYER);
 		desc = this.registerSetting(
@@ -25,7 +24,7 @@ public class ActionSoundsModule extends Module {
 	}
 
 	@EventHandler
-	private void onPacketReceived(final @NotNull ReceivePacketEvent event) {
+	private void onPacketReceived(final ReceivePacketEvent event) {
 		if (!ClientUtil.notNull())
 			return;
 		if (!blocked.getValue())
@@ -43,7 +42,7 @@ public class ActionSoundsModule extends Module {
 	}
 
 	@EventHandler
-	public void onAttackEntity(final @NotNull AttackEntityEvent event) {
+	public void onAttackEntity(final AttackEntityEvent event) {
 		if (!ClientUtil.notNull())
 			return;
 		if (!crit.getValue())

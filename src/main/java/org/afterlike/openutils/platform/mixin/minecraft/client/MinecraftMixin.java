@@ -13,7 +13,6 @@ import org.afterlike.openutils.event.impl.*;
 import org.afterlike.openutils.module.impl.render.FreeLookModule;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.client.UpdateUtil;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.objectweb.asm.Opcodes;
@@ -29,17 +28,17 @@ public abstract class MinecraftMixin {
 	@Unique boolean ou$pendingUpdateNotification;
 	@Unique String ou$url = "https://github.com/polariscli/OpenUtils/releases/latest";
 	@Inject(method = "startGame", at = @At("HEAD"))
-	private void startGame$head(final @NotNull CallbackInfo callbackInfo) {
+	private void startGame$head(final CallbackInfo callbackInfo) {
 		OpenUtils.get().initialize();
 	}
 
 	@Inject(method = "startGame", at = @At(value = "CONSTANT", args = "stringValue=Post startup"))
-	private void ou$startGame$postStartup(@NotNull final CallbackInfo ci) {
+	private void ou$startGame$postStartup(final CallbackInfo ci) {
 		OpenUtils.get().lateInitialize();
 	}
 
 	@Inject(method = "updateFramebufferSize", at = @At("RETURN"))
-	private void ou$updateFramebufferSize(@NotNull final CallbackInfo ci) {
+	private void ou$updateFramebufferSize(final CallbackInfo ci) {
 		OpenUtils.get().getEventBus().post(new ResizeWindowEvent());
 	}
 
@@ -77,7 +76,7 @@ public abstract class MinecraftMixin {
 	}
 
 	@Inject(method = "runTick", at = @At("HEAD"))
-	private void ou$runTick$head(@NotNull final CallbackInfo ci) {
+	private void ou$runTick$head(final CallbackInfo ci) {
 		OpenUtils.get().getEventBus().post(new GameTickEvent(EventPhase.PRE));
 		if (ou$pendingUpdateNotification && ClientUtil.notNull()) {
 			ClientUtil.sendMessage("&fUpdate available: &aOpenUtils " + UpdateUtil.getLatest());
@@ -98,7 +97,7 @@ public abstract class MinecraftMixin {
 	}
 
 	@Inject(method = "runTick", at = @At("RETURN"))
-	private void ou$runTick$return(@NotNull final CallbackInfo ci) {
+	private void ou$runTick$return(final CallbackInfo ci) {
 		OpenUtils.get().getEventBus().post(new GameTickEvent(EventPhase.POST));
 	}
 

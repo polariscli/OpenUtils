@@ -4,17 +4,16 @@ import java.awt.*;
 import org.afterlike.openutils.gui.component.Component;
 import org.afterlike.openutils.module.api.setting.impl.KeybindSetting;
 import org.afterlike.openutils.module.impl.client.GuiModule;
-import org.jetbrains.annotations.NotNull;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 public class KeybindComponent extends Component {
 	private boolean isBinding;
-	private final @NotNull ModuleComponent parent;
+	private final ModuleComponent parent;
 	private int yOffset;
 	private int x;
 	private int y;
-	public KeybindComponent(@NotNull final ModuleComponent parent, final int yOffset) {
+	public KeybindComponent(final ModuleComponent parent, final int yOffset) {
 		this.parent = parent;
 		this.x = parent.panel.getX() + parent.panel.getWidth();
 		this.y = parent.panel.getY() + parent.yOffset;
@@ -82,7 +81,7 @@ public class KeybindComponent extends Component {
 		return 12;
 	}
 
-	private void drawLabel(@NotNull final String label) {
+	private void drawLabel(final String label) {
 		mc.fontRendererObj.drawStringWithShadow(label, (this.parent.panel.getX() + 4) * 2,
 				(this.parent.panel.getY() + this.yOffset + 3) * 2,
 				Color.HSBtoRGB((float) (System.currentTimeMillis() % 3750L) / 3750.0F, 0.8F, 0.8F));

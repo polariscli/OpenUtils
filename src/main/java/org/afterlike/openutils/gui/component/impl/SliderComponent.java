@@ -7,32 +7,29 @@ import net.minecraft.client.gui.Gui;
 import org.afterlike.openutils.gui.component.Component;
 import org.afterlike.openutils.module.api.setting.impl.ModeSetting;
 import org.afterlike.openutils.module.api.setting.impl.NumberSetting;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.opengl.GL11;
 
 public class SliderComponent extends Component {
-	private final @Nullable NumberSetting numberSetting;
-	private final @Nullable ModeSetting modeSetting;
-	private final @NotNull ModuleComponent parent;
+	private final NumberSetting numberSetting;
+	private final ModeSetting modeSetting;
+	private final ModuleComponent parent;
 	private int yOffset;
 	private int x;
 	private int y;
 	private boolean dragging;
 	private double width;
-	public SliderComponent(@NotNull final NumberSetting setting,
-			@NotNull final ModuleComponent parent, final int yOffset) {
+	public SliderComponent(final NumberSetting setting, final ModuleComponent parent,
+			final int yOffset) {
 		this(setting, null, parent, yOffset);
 	}
 
-	public SliderComponent(@NotNull final ModeSetting setting,
-			@NotNull final ModuleComponent parent, final int yOffset) {
+	public SliderComponent(final ModeSetting setting, final ModuleComponent parent,
+			final int yOffset) {
 		this(null, setting, parent, yOffset);
 	}
 
-	private SliderComponent(@Nullable final NumberSetting numberSetting,
-			@Nullable final ModeSetting modeSetting, @NotNull final ModuleComponent parent,
-			final int yOffset) {
+	private SliderComponent(final NumberSetting numberSetting, final ModeSetting modeSetting,
+			final ModuleComponent parent, final int yOffset) {
 		this.dragging = false;
 		this.numberSetting = numberSetting;
 		this.modeSetting = modeSetting;
@@ -137,7 +134,7 @@ public class SliderComponent extends Component {
 		this.dragging = false;
 	}
 
-	private @NotNull String getLabel() {
+	private String getLabel() {
 		if (numberSetting != null) {
 			return numberSetting.getName() + ": " + numberSetting.getDisplayValue();
 		} else if (modeSetting != null) {

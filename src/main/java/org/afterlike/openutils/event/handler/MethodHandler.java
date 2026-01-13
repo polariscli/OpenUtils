@@ -2,8 +2,6 @@ package org.afterlike.openutils.event.handler;
 
 import java.lang.reflect.Method;
 import org.afterlike.openutils.event.api.Event;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 /*
  * Derived from AzuraClient’s EventBus
  * https://github.com/AzuraClient/Azura-Event-Bus
@@ -32,9 +30,9 @@ import org.jetbrains.annotations.Nullable;
  */
 
 public final class MethodHandler {
-	private final @NotNull Object parent;
-	private @Nullable Method method;
-	public MethodHandler(@NotNull final Method method, @NotNull final Object parent) {
+	private final Object parent;
+	private Method method;
+	public MethodHandler(final Method method, final Object parent) {
 		this.method = method;
 		this.parent = parent;
 		if (!this.isValid(this.method)) {
@@ -44,7 +42,7 @@ public final class MethodHandler {
 		this.method.setAccessible(true);
 	}
 
-	private boolean isValid(@NotNull final Method method) {
+	private boolean isValid(final Method method) {
 		if (method.getParameterCount() == 0)
 			return false;
 		final Class<?> parameterTypes = method.getParameterTypes()[0];
@@ -57,11 +55,11 @@ public final class MethodHandler {
 		return this.isValid(superclass.getInterfaces()[0]);
 	}
 
-	private boolean isValid(@NotNull final Class<?> clazz) {
+	private boolean isValid(final Class<?> clazz) {
 		return clazz.equals(Event.class);
 	}
 
-	public void call(final @NotNull Event event) {
+	public void call(final Event event) {
 		if (this.method == null)
 			return;
 		try {

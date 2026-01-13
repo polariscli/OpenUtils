@@ -1,16 +1,13 @@
 package org.afterlike.openutils.module.api.setting;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 public class Setting<T> {
-	protected final @NotNull String name;
+	protected final String name;
 	protected T value;
-	public Setting(@NotNull final String name) {
+	public Setting(final String name) {
 		this.name = name;
 	}
 
-	public @NotNull String getName() {
+	public String getName() {
 		return this.name;
 	}
 
@@ -18,16 +15,16 @@ public class Setting<T> {
 		return value;
 	}
 
-	public void setValue(@NotNull T value) {
+	public void setValue(T value) {
 		this.value = value;
 	}
 
-	public @Nullable Object serializeValue() {
+	public Object serializeValue() {
 		return value;
 	}
 
 	@SuppressWarnings("unchecked")
-	public void deserializeValue(@Nullable Object raw) {
+	public void deserializeValue(Object raw) {
 		if (raw == null)
 			return;
 		try {

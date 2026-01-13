@@ -10,10 +10,9 @@ import org.afterlike.openutils.module.api.setting.impl.NumberSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.client.TextUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
-import org.jetbrains.annotations.NotNull;
 
 public class QuickMathModule extends Module {
-	private final @NotNull NumberSetting delay;
+	private final NumberSetting delay;
 	private String pendingAnswer = "";
 	private long sendTime = 0;
 	public QuickMathModule() {

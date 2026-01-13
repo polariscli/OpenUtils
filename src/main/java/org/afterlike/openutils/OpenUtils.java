@@ -13,20 +13,18 @@ import org.afterlike.openutils.util.client.UpdateUtil;
 import org.afterlike.openutils.util.lang.ReflectionUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class OpenUtils {
-	private static final @NotNull Logger logger = LogManager.getLogger(OpenUtils.class);
-	private static final @Nullable OpenUtils instance = new OpenUtils();
-	private static final @NotNull String VERSION = org.afterlike.openutils.BuildConstants.VERSION;
+	private static final Logger logger = LogManager.getLogger(OpenUtils.class);
+	private static final OpenUtils instance = new OpenUtils();
+	private static final String VERSION = org.afterlike.openutils.BuildConstants.VERSION;
 	// check for updates
 	private static volatile boolean outdated = false;
 	private static volatile boolean notified = false;
-	private final @NotNull ModuleHandler moduleHandler;
-	private final @NotNull ConfigHandler configHandler;
-	private final @NotNull EventBus eventBus;
-	private @Nullable ClickGuiScreen clickGuiScreen;
+	private final ModuleHandler moduleHandler;
+	private final ConfigHandler configHandler;
+	private final EventBus eventBus;
+	private ClickGuiScreen clickGuiScreen;
 	public OpenUtils() {
 		this.moduleHandler = new ModuleHandler();
 		this.configHandler = new ConfigHandler();
@@ -41,12 +39,12 @@ public class OpenUtils {
 	}
 
 	public void lateInitialize() {
-		final @NotNull FMLCommonHandler commonHandler = FMLCommonHandler.instance();
+		final FMLCommonHandler commonHandler = FMLCommonHandler.instance();
 		commonHandler.computeBranding();
-		for (final @NotNull String field : new String[]{"brandings", "brandingsNoMC"}) {
-			final @NotNull List<String> list = Objects
+		for (final String field : new String[]{"brandings", "brandingsNoMC"}) {
+			final List<String> list = Objects
 					.requireNonNull(ReflectionUtil.getField(commonHandler, field));
-			final @NotNull ImmutableList.Builder<String> builder = ImmutableList.builder();
+			final ImmutableList.Builder<String> builder = ImmutableList.builder();
 			builder.add(String.format("%sOpenUtils %s", EnumChatFormatting.WHITE, VERSION));
 			builder.addAll(list);
 			ReflectionUtil.setField(commonHandler, field, builder.build());
@@ -54,26 +52,26 @@ public class OpenUtils {
 		UpdateUtil.checkAsync();
 	}
 
-	public @NotNull EventBus getEventBus() {
+	public EventBus getEventBus() {
 		return eventBus;
 	}
 
-	public @NotNull ModuleHandler getModuleHandler() {
+	public ModuleHandler getModuleHandler() {
 		return moduleHandler;
 	}
 
-	public @NotNull ConfigHandler getConfigHandler() {
+	public ConfigHandler getConfigHandler() {
 		return configHandler;
 	}
 
-	public @NotNull ClickGuiScreen getClickGuiScreen() {
+	public ClickGuiScreen getClickGuiScreen() {
 		if (clickGuiScreen == null) {
 			clickGuiScreen = new ClickGuiScreen();
 		}
 		return clickGuiScreen;
 	}
 
-	public @NotNull String getVersion() {
+	public String getVersion() {
 		return VERSION;
 	}
 
@@ -93,7 +91,7 @@ public class OpenUtils {
 		return notified;
 	}
 
-	public static @NotNull OpenUtils get() {
+	public static OpenUtils get() {
 		return Objects.requireNonNull(instance);
 	}
 }

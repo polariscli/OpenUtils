@@ -21,8 +21,6 @@ import org.afterlike.openutils.util.client.TextUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
 import org.afterlike.openutils.util.game.RenderUtil;
 import org.afterlike.openutils.util.game.WorldUtil;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class TimersHudModule extends Module implements HudModule {
 	private final Position position = new Position(5, 150);
@@ -76,7 +74,7 @@ public class TimersHudModule extends Module implements HudModule {
 	}
 
 	@EventHandler
-	private void onTick(final @NotNull GameTickEvent event) {
+	private void onTick(final GameTickEvent event) {
 		if (event.getPhase() != EventPhase.POST)
 			return;
 		final int status = GameModeUtil.getBedWarsStatus();
@@ -97,7 +95,7 @@ public class TimersHudModule extends Module implements HudModule {
 	}
 
 	@EventHandler
-	private void onRender(final @NotNull RenderOverlayEvent event) {
+	private void onRender(final RenderOverlayEvent event) {
 		if (!ClientUtil.notNull() || mc.gameSettings.showDebugInfo || !inGame) {
 			return;
 		}
@@ -115,7 +113,7 @@ public class TimersHudModule extends Module implements HudModule {
 		drawLine("§bDiamonds (§7" + diamondCount + "§b): §f" + diamondNext, x, y, delta);
 	}
 
-	private void drawLine(final @NotNull String text, final int x, final int y, final int delta) {
+	private void drawLine(final String text, final int x, final int y, final int delta) {
 		mc.fontRendererObj.drawString(text, x, y, RenderUtil.getChromaColor(2L, delta),
 				useHudDropShadow());
 	}
@@ -140,23 +138,23 @@ public class TimersHudModule extends Module implements HudModule {
 	}
 
 	@Override
-	public void onSettingChanged(@Nullable final Setting<?> setting) {
+	public void onSettingChanged(final Setting<?> setting) {
 		handleHudSettingChanged(setting);
 		super.onSettingChanged(setting);
 	}
 
 	@Override
-	public @NotNull Position getHudPosition() {
+	public Position getHudPosition() {
 		return position;
 	}
 
 	@Override
-	public @NotNull BooleanSetting getHudEditSetting() {
+	public BooleanSetting getHudEditSetting() {
 		return editPosition;
 	}
 
 	@Override
-	public @NotNull String getHudPlaceholderText() {
+	public String getHudPlaceholderText() {
 		return "Game Time:-Emeralds:-Diamonds:";
 	}
 
@@ -222,7 +220,7 @@ public class TimersHudModule extends Module implements HudModule {
 		}
 	}
 
-	private int getTier(final int time, final @NotNull List<Integer> upgrades) {
+	private int getTier(final int time, final List<Integer> upgrades) {
 		if (upgrades.size() > 1 && time >= upgrades.get(1)) {
 			return 3;
 		}
@@ -232,8 +230,8 @@ public class TimersHudModule extends Module implements HudModule {
 		return 1;
 	}
 
-	private @NotNull SpawnResult calculateSpawns(final int time, final int first,
-			final @NotNull List<Integer> upgrades, final @NotNull IntUnaryOperator intervalGen) {
+	private SpawnResult calculateSpawns(final int time, final int first,
+			final List<Integer> upgrades, final IntUnaryOperator intervalGen) {
 		if (time < first) {
 			return new SpawnResult(0, first - time);
 		}
@@ -300,7 +298,7 @@ public class TimersHudModule extends Module implements HudModule {
 		diamondNext = diamondResult.next;
 	}
 
-	private @NotNull String formatTime(final int seconds) {
+	private String formatTime(final int seconds) {
 		final int minutes = seconds / 60;
 		final int secs = seconds % 60;
 		return String.format("%d:%02d", minutes, secs);

@@ -1,8 +1,6 @@
 package org.afterlike.openutils.util.game;
 
 import net.minecraft.entity.player.EntityPlayer;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public final class BedWarsUtil {
 	public enum TeamColor {
@@ -23,7 +21,7 @@ public final class BedWarsUtil {
 			return colorCode;
 		}
 
-		public static TeamColor fromFormattedName(@Nullable final String formattedName) {
+		public static TeamColor fromFormattedName(final String formattedName) {
 			if (formattedName == null) {
 				return null;
 			}
@@ -35,17 +33,17 @@ public final class BedWarsUtil {
 			return null;
 		}
 	}
-	public static @Nullable String getFormattedTeamName(@Nullable final EntityPlayer player) {
+	public static String getFormattedTeamName(final EntityPlayer player) {
 		TeamColor color = getTeamColor(player);
 		return color != null ? color.getColorCode() + color.getDisplayName() : null;
 	}
 
-	public static @Nullable String getTeamName(@Nullable final EntityPlayer player) {
+	public static String getTeamName(final EntityPlayer player) {
 		TeamColor color = getTeamColor(player);
 		return color != null ? color.getDisplayName() : null;
 	}
 
-	public static @Nullable TeamColor getTeamColor(@Nullable final EntityPlayer player) {
+	public static TeamColor getTeamColor(final EntityPlayer player) {
 		if (player == null) {
 			return null;
 		}
@@ -53,8 +51,7 @@ public final class BedWarsUtil {
 	}
 
 	// TODO: cache team color to avoid spectating edge cases
-	public static boolean isTeammate(final @NotNull EntityPlayer self,
-			final @NotNull EntityPlayer target) {
+	public static boolean isTeammate(final EntityPlayer self, final EntityPlayer target) {
 		TeamColor targetColor = getTeamColor(target);
 		TeamColor selfColor = getTeamColor(self);
 		return targetColor != null && targetColor == selfColor;

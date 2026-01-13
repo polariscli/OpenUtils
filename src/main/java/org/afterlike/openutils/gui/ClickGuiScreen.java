@@ -10,17 +10,15 @@ import org.afterlike.openutils.gui.panel.CategoryPanel;
 import org.afterlike.openutils.module.api.ModuleCategory;
 import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
 import org.afterlike.openutils.module.impl.client.GuiModule;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.input.Keyboard;
 
 public class ClickGuiScreen extends GuiScreen {
-	public static @Nullable ArrayList<@NotNull CategoryPanel> categoryPanels;
+	public static ArrayList<CategoryPanel> categoryPanels;
 	public ClickGuiScreen() {
 		categoryPanels = new ArrayList<>();
 		int y = 5;
-		for (@NotNull final ModuleCategory category : ModuleCategory.values()) {
-			@NotNull final CategoryPanel panel = new CategoryPanel(category);
+		for (final ModuleCategory category : ModuleCategory.values()) {
+			final CategoryPanel panel = new CategoryPanel(category);
 			panel.setY(y);
 			categoryPanels.add(panel);
 			y += 20;
@@ -40,10 +38,10 @@ public class ClickGuiScreen extends GuiScreen {
 				.getValue()) {
 			drawDefaultBackground();
 		}
-		for (@NotNull final CategoryPanel panel : categoryPanels) {
+		for (final CategoryPanel panel : categoryPanels) {
 			panel.renderPanel(this.fontRendererObj);
 			panel.updateDragPosition(x, y);
-			for (@NotNull final Component component : panel.getComponents()) {
+			for (final Component component : panel.getComponents()) {
 				component.update(x, y);
 			}
 		}
@@ -52,7 +50,7 @@ public class ClickGuiScreen extends GuiScreen {
 	public void mouseClicked(final int x, final int y, final int mouseButton) {
 		if (categoryPanels == null)
 			return;
-		for (@NotNull final CategoryPanel panel : categoryPanels) {
+		for (final CategoryPanel panel : categoryPanels) {
 			if (panel.isHeaderHovered(x, y) && mouseButton == 0) {
 				panel.setDragging(true);
 				panel.setDragOffset(x - panel.getX(), y - panel.getY());
@@ -62,7 +60,7 @@ public class ClickGuiScreen extends GuiScreen {
 				panel.setExpanded(!panel.isExpanded());
 			}
 			if (panel.isExpanded() && !panel.getComponents().isEmpty()) {
-				for (@NotNull final Component component : panel.getComponents()) {
+				for (final Component component : panel.getComponents()) {
 					component.onClick(x, y, mouseButton);
 				}
 			}
@@ -72,12 +70,12 @@ public class ClickGuiScreen extends GuiScreen {
 	public void mouseReleased(final int x, final int y, final int state) {
 		if (state == 0) {
 			if (categoryPanels != null) {
-				for (@NotNull final CategoryPanel panel : categoryPanels) {
+				for (final CategoryPanel panel : categoryPanels) {
 					panel.setDragging(false);
 				}
-				for (@NotNull final CategoryPanel panel : categoryPanels) {
+				for (final CategoryPanel panel : categoryPanels) {
 					if (panel.isExpanded() && !panel.getComponents().isEmpty()) {
-						for (@NotNull final Component component : panel.getComponents()) {
+						for (final Component component : panel.getComponents()) {
 							component.onMouseRelease(x, y, state);
 						}
 					}
@@ -90,9 +88,9 @@ public class ClickGuiScreen extends GuiScreen {
 	public void keyTyped(final char typedChar, final int keyCode) {
 		final boolean bindingInProgress = this.isBinding();
 		if (categoryPanels != null) {
-			for (@NotNull final CategoryPanel panel : categoryPanels) {
+			for (final CategoryPanel panel : categoryPanels) {
 				if (panel.isExpanded() && !panel.getComponents().isEmpty()) {
-					for (@NotNull final Component component : panel.getComponents()) {
+					for (final Component component : panel.getComponents()) {
 						component.onKeyTyped(typedChar, keyCode);
 					}
 				}
@@ -115,9 +113,9 @@ public class ClickGuiScreen extends GuiScreen {
 	private boolean isBinding() {
 		if (categoryPanels == null)
 			return false;
-		for (@NotNull final CategoryPanel panel : categoryPanels) {
+		for (final CategoryPanel panel : categoryPanels) {
 			if (panel.isExpanded() && !panel.getComponents().isEmpty()) {
-				for (@NotNull final Component component : panel.getComponents()) {
+				for (final Component component : panel.getComponents()) {
 					if (component instanceof ModuleComponent
 							&& ((ModuleComponent) component).isBinding()) {
 						return true;

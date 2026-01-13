@@ -15,7 +15,6 @@ import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
 import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
-import org.jetbrains.annotations.NotNull;
 
 // TODO: rewrite - currently a direct port from meowtils
 public class ResourceCountModule extends Module {
@@ -37,7 +36,7 @@ public class ResourceCountModule extends Module {
 	}
 	private final Map<Item, Integer> lastCounts = new HashMap<>();
 	@EventHandler
-	private void onTick(final @NotNull GameTickEvent event) {
+	private void onTick(final GameTickEvent event) {
 		if (event.getPhase() != EventPhase.POST)
 			return;
 		if (!GameModeUtil.onHypixel())
@@ -61,7 +60,7 @@ public class ResourceCountModule extends Module {
 		lastCounts.putAll(current);
 	}
 
-	private void handleChanges(final @NotNull Map<@NotNull Item, @NotNull Integer> current) {
+	private void handleChanges(final Map<Item, Integer> current) {
 		for (Map.Entry<Item, Integer> entry : current.entrySet()) {
 			Item item = entry.getKey();
 			int newCount = entry.getValue();
@@ -82,7 +81,7 @@ public class ResourceCountModule extends Module {
 		}
 	}
 
-	private boolean isTracking(final @NotNull Item item) {
+	private boolean isTracking(final Item item) {
 		if (item == Items.iron_ingot)
 			return trackIron.getValue();
 		if (item == Items.gold_ingot)
@@ -94,7 +93,7 @@ public class ResourceCountModule extends Module {
 		return false;
 	}
 
-	private String getItemDisplayName(final @NotNull Item item) {
+	private String getItemDisplayName(final Item item) {
 		if (item == Items.iron_ingot)
 			return EnumChatFormatting.WHITE + "Iron";
 		if (item == Items.gold_ingot)
@@ -106,7 +105,7 @@ public class ResourceCountModule extends Module {
 		return "Unknown";
 	}
 
-	private void initCounts(final @NotNull Map<@NotNull Item, @NotNull Integer> map) {
+	private void initCounts(final Map<Item, Integer> map) {
 		map.put(Items.iron_ingot, 0);
 		map.put(Items.gold_ingot, 0);
 		map.put(Items.diamond, 0);

@@ -3,31 +3,28 @@ package org.afterlike.openutils.module.api.setting.impl;
 import java.util.Arrays;
 import java.util.List;
 import org.afterlike.openutils.module.api.setting.Setting;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ModeSetting extends Setting<String> {
-	private final @NotNull List<@NotNull String> modes;
+	private final List<String> modes;
 	private int index;
-	public ModeSetting(@NotNull String name, @NotNull String defaultMode,
-			@NotNull String... modes) {
+	public ModeSetting(String name, String defaultMode, String... modes) {
 		super(name);
 		this.modes = Arrays.asList(modes);
 		this.index = Math.max(0, this.modes.indexOf(defaultMode));
 		this.value = this.modes.isEmpty() ? "" : this.modes.get(this.index);
 	}
 
-	public @NotNull List<@NotNull String> getModes() {
+	public List<String> getModes() {
 		return modes;
 	}
 
 	@Override
-	public @NotNull String getValue() {
+	public String getValue() {
 		return value;
 	}
 
 	@Override
-	public void setValue(@NotNull String mode) {
+	public void setValue(String mode) {
 		int found = modes.indexOf(mode);
 		if (found >= 0) {
 			setIndex(found);
@@ -62,12 +59,12 @@ public class ModeSetting extends Setting<String> {
 	}
 
 	@Override
-	public @NotNull Object serializeValue() {
+	public Object serializeValue() {
 		return value;
 	}
 
 	@Override
-	public void deserializeValue(@Nullable Object raw) {
+	public void deserializeValue(Object raw) {
 		if (raw instanceof String) {
 			setValue((String) raw);
 		}

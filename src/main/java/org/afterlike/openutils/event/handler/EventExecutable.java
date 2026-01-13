@@ -5,8 +5,6 @@ import java.lang.reflect.Method;
 import org.afterlike.openutils.event.api.Event;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 /*
  * Derived from AzuraClient’s EventBus
  * https://github.com/AzuraClient/Azura-Event-Bus
@@ -35,33 +33,30 @@ import org.jetbrains.annotations.Nullable;
  */
 
 public final class EventExecutable {
-	private static final @NotNull Logger logger = LogManager.getLogger(EventExecutable.class);
+	private static final Logger logger = LogManager.getLogger(EventExecutable.class);
 	// Parental object
-	private final @NotNull Object parent;
+	private final Object parent;
 	// MethodHandler instance for registered methods
-	private @Nullable MethodHandler method;
+	private MethodHandler method;
 	// ListenerHandler instance for registered listeners
-	private @Nullable ListenerHandler<? extends Event> listener;
+	private ListenerHandler<? extends Event> listener;
 	private final int priority;
-	public EventExecutable(final @NotNull Method method, final @NotNull Object parent,
-			final int eventPriority) {
+	public EventExecutable(final Method method, final Object parent, final int eventPriority) {
 		this(method, null, parent, eventPriority);
 	}
 
-	public EventExecutable(final @NotNull Field field, final @NotNull Object parent,
-			final int eventPriority) {
+	public EventExecutable(final Field field, final Object parent, final int eventPriority) {
 		this(null, field, parent, eventPriority);
 	}
 
-	public <U extends Event> EventExecutable(final @NotNull Class<U> clazz,
-			final @NotNull Listener<U> listener, final @NotNull Object parent,
-			final int eventPriority) {
+	public <U extends Event> EventExecutable(final Class<U> clazz, final Listener<U> listener,
+			final Object parent, final int eventPriority) {
 		this((Method) null, null, parent, eventPriority);
 		this.listener = new ListenerHandler<>(clazz, listener);
 	}
 
-	public EventExecutable(final @Nullable Method method, final @Nullable Field field,
-			final @NotNull Object parent, final int priority) {
+	public EventExecutable(final Method method, final Field field, final Object parent,
+			final int priority) {
 		this.parent = parent;
 		this.priority = priority;
 		// Registering a listener if the field isn't null
@@ -83,7 +78,7 @@ public final class EventExecutable {
 		}
 	}
 
-	public @NotNull Object getParent() {
+	public Object getParent() {
 		return parent;
 	}
 
@@ -91,7 +86,7 @@ public final class EventExecutable {
 		return priority;
 	}
 
-	public void call(final @NotNull Event event) {
+	public void call(final Event event) {
 		if (listener != null)
 			listener.call(event);
 		if (method != null)
