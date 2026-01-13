@@ -14,6 +14,7 @@ import org.afterlike.openutils.event.impl.GameTickEvent;
 import org.afterlike.openutils.event.impl.RenderOverlayEvent;
 import org.afterlike.openutils.module.api.Module;
 import org.afterlike.openutils.module.api.ModuleCategory;
+import org.afterlike.openutils.module.api.hud.Anchor;
 import org.afterlike.openutils.module.api.hud.HudModule;
 import org.afterlike.openutils.module.api.hud.Position;
 import org.afterlike.openutils.module.api.setting.Setting;
@@ -24,8 +25,7 @@ import org.afterlike.openutils.util.client.ClientUtil;
 
 public class FallViewModule extends Module implements HudModule {
 	private static final int WHITE_ARGB = 0xFFFFFFFF;
-	// this position default will be fixed when i add anchor points
-	private final Position position = new Position(200, 95);
+	private final Position position = new Position(0, 50, Anchor.CENTER);
 	private final DescriptionSetting description;
 	private final BooleanSetting editPosition;
 	private final BooleanSetting dropShadow;

@@ -22,6 +22,7 @@ import org.afterlike.openutils.config.api.PanelEntry;
 import org.afterlike.openutils.gui.ClickGuiScreen;
 import org.afterlike.openutils.gui.panel.CategoryPanel;
 import org.afterlike.openutils.module.api.Module;
+import org.afterlike.openutils.module.api.hud.Anchor;
 import org.afterlike.openutils.module.api.hud.HudModule;
 import org.afterlike.openutils.module.api.hud.Position;
 import org.afterlike.openutils.module.api.setting.Setting;
@@ -81,6 +82,12 @@ public class ConfigHandler {
 			}
 			if (module instanceof HudModule && entry.hud != null) {
 				final Position position = ((HudModule) module).getHudPosition();
+				if (entry.hud.anchor != null) {
+					try {
+						position.setAnchor(Anchor.valueOf(entry.hud.anchor));
+					} catch (final IllegalArgumentException ignored) {
+					}
+				}
 				position.setPosition(entry.hud.x, entry.hud.y);
 			}
 		}
@@ -120,8 +127,9 @@ public class ConfigHandler {
 			if (module instanceof HudModule) {
 				final Position position = ((HudModule) module).getHudPosition();
 				final HudEntry hudEntry = new HudEntry();
-				hudEntry.x = position.getX();
-				hudEntry.y = position.getY();
+				hudEntry.x = position.getOffsetX();
+				hudEntry.y = position.getOffsetY();
+				hudEntry.anchor = position.getAnchor().name();
 				entry.hud = hudEntry;
 			}
 			data.modules.put(module.getName(), entry);

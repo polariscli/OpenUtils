@@ -13,6 +13,7 @@ import org.afterlike.openutils.module.api.setting.impl.BooleanSetting;
 import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
 import org.afterlike.openutils.module.api.setting.impl.ModeSetting;
 import org.afterlike.openutils.module.api.setting.impl.NumberSetting;
+import org.afterlike.openutils.module.api.setting.impl.TextFieldSetting;
 import org.afterlike.openutils.module.impl.client.GuiModule;
 import org.afterlike.openutils.module.impl.render.FreeLookModule;
 import org.lwjgl.opengl.GL11;
@@ -56,6 +57,12 @@ public class ModuleComponent extends Component {
 							this, y);
 					this.settingComponents.add(description);
 					y += 12;
+				} else if (setting instanceof TextFieldSetting) {
+					final TextFieldSetting textSetting = (TextFieldSetting) setting;
+					final TextFieldComponent textField = new TextFieldComponent(textSetting, this,
+							y);
+					this.settingComponents.add(textField);
+					y += 20;
 				}
 			}
 		}
@@ -211,6 +218,15 @@ public class ModuleComponent extends Component {
 	public boolean isBinding() {
 		for (final Component c : this.settingComponents) {
 			if (c instanceof KeybindComponent && ((KeybindComponent) c).isBinding()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isTextFieldFocused() {
+		for (final Component c : this.settingComponents) {
+			if (c instanceof TextFieldComponent && ((TextFieldComponent) c).isFocused()) {
 				return true;
 			}
 		}

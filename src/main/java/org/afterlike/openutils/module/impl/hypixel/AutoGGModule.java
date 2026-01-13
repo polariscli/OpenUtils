@@ -9,14 +9,14 @@ import org.afterlike.openutils.event.impl.GameTickEvent;
 import org.afterlike.openutils.event.impl.ReceiveChatEvent;
 import org.afterlike.openutils.module.api.Module;
 import org.afterlike.openutils.module.api.ModuleCategory;
-import org.afterlike.openutils.module.api.setting.impl.ModeSetting;
 import org.afterlike.openutils.module.api.setting.impl.NumberSetting;
+import org.afterlike.openutils.module.api.setting.impl.TextFieldSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.client.TextUtil;
 
 public class AutoGGModule extends Module {
 	private final NumberSetting delay;
-	private final ModeSetting content;
+	private final TextFieldSetting content;
 	private static final List<Pattern> GAME_END_PATTERNS = new ArrayList<>();
 	static {
 		String[] regexes = new String[]{
@@ -43,8 +43,7 @@ public class AutoGGModule extends Module {
 	public AutoGGModule() {
 		super("Auto GG", ModuleCategory.HYPIXEL);
 		delay = this.registerSetting(new NumberSetting("Send Delay (ms)", 1000, 0, 5000, 100));
-		// TODO: add text field component
-		content = this.registerSetting(new ModeSetting("Message", "gg", "gg", "GG", "gG <3"));
+		content = this.registerSetting(new TextFieldSetting("Message", "gg", "Enter message..."));
 	}
 
 	@EventHandler

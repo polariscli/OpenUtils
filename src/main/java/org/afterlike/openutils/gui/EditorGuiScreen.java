@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.fml.client.config.GuiButtonExt;
 import org.afterlike.openutils.OpenUtils;
+import org.afterlike.openutils.module.api.hud.Anchor;
 import org.afterlike.openutils.module.api.hud.HudModule;
 import org.afterlike.openutils.module.api.hud.Position;
 import org.afterlike.openutils.util.game.RenderUtil;
@@ -25,6 +26,8 @@ public class EditorGuiScreen extends GuiScreen {
 	private int startDragY = 0;
 	private int lastMouseX = 0;
 	private int lastMouseY = 0;
+	private int currentScreenX = 0;
+	private int currentScreenY = 0;
 	public EditorGuiScreen(final HudModule module, final String placeholderText) {
 		this.module = module;
 		this.placeholderText = placeholderText;
@@ -55,6 +58,9 @@ public class EditorGuiScreen extends GuiScreen {
 		final int y = res.getScaledHeight() / 2 - 20;
 		RenderUtil.drawChromaText("Edit the HUD position by dragging.", '-', x, y, 2L, 0L, true,
 				this.mc.fontRendererObj);
+		final Anchor anchor = position.getAnchor();
+		final String anchorText = "Anchor: " + anchor.name().replace("_", " ");
+		this.mc.fontRendererObj.drawStringWithShadow(anchorText, 5, 5, Color.LIGHT_GRAY.getRGB());
 		try {
 			this.handleInput();
 		} catch (final IOException ignored) {
@@ -76,9 +82,9 @@ public class EditorGuiScreen extends GuiScreen {
 		super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
 		if (clickedMouseButton == 0) {
 			if (this.dragging) {
-				final int newX = this.startDragX + (mouseX - this.lastMouseX);
-				final int newY = this.startDragY + (mouseY - this.lastMouseY);
-				module.getHudPosition().setPosition(newX, newY);
+				this.currentScreenX = this.startDragX + (mouseX - this.lastMouseX);
+				this.currentScreenY = this.startDragY + (mouseY - this.lastMouseY);
+				module.getHudPosition().setScreenPosition(this.currentScreenX, this.currentScreenY);
 			} else if (mouseX > this.previewMinX && mouseX < this.previewMaxX
 					&& mouseY > this.previewMinY && mouseY < this.previewMaxY) {
 				this.dragging = true;
@@ -86,6 +92,8 @@ public class EditorGuiScreen extends GuiScreen {
 				this.lastMouseY = mouseY;
 				this.startDragX = module.getHudPosition().getX();
 				this.startDragY = module.getHudPosition().getY();
+				this.currentScreenX = this.startDragX;
+				this.currentScreenY = this.startDragY;
 			}
 		}
 	}
@@ -93,8 +101,18 @@ public class EditorGuiScreen extends GuiScreen {
 	@Override
 	protected void mouseReleased(final int mouseX, final int mouseY, final int state) {
 		super.mouseReleased(mouseX, mouseY, state);
-		if (state == 0) {
+		if (state == 0 && this.dragging) {
 			this.dragging = false;
+			final Position position = module.getHudPosition();
+			final ScaledResolution res = new ScaledResolution(this.mc);
+			final int screenX = position.getX();
+			final int screenY = position.getY();
+			final int centerX = screenX + 25;
+			final int centerY = screenY + 16;
+			final Anchor newAnchor = Anchor.detect(centerX, centerY, res.getScaledWidth(),
+					res.getScaledHeight());
+			position.setAnchor(newAnchor);
+			position.setScreenPosition(screenX, screenY);
 			OpenUtils.get().getConfigHandler().saveConfiguration();
 		}
 	}
