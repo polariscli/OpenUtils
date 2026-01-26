@@ -21,6 +21,7 @@ public class ArrayListModule extends Module implements HudModule {
 	private final Position position = new Position(5, 70);
 	private final BooleanSetting editPosition;
 	private final BooleanSetting dropShadow;
+	private final BooleanSetting chroma;
 	private final BooleanSetting alphabeticalSort;
 	private final List<Module> sortedAlpha = new ArrayList<>(64);
 	private final List<Module> sortedWidth = new ArrayList<>(64);
@@ -32,6 +33,7 @@ public class ArrayListModule extends Module implements HudModule {
 		super("Array List", ModuleCategory.RENDER);
 		this.registerSetting(editPosition = new BooleanSetting("Edit position", false));
 		this.registerSetting(dropShadow = new BooleanSetting("Drop shadow", true));
+		this.registerSetting(chroma = new BooleanSetting("Chroma", false));
 		this.registerSetting(alphabeticalSort = new BooleanSetting("Alphabetical sort", false));
 	}
 
@@ -57,8 +59,8 @@ public class ArrayListModule extends Module implements HudModule {
 		for (final Module module : list) {
 			if (module == this || !module.isEnabled())
 				continue;
-			mc.fontRendererObj.drawString(module.getName(), x, y,
-					RenderUtil.getChromaColor(2L, delta), shadow);
+			int color = chroma.getValue() ? RenderUtil.getChromaColor(2L, delta) : 0xFFFFFFFF;
+			mc.fontRendererObj.drawString(module.getName(), x, y, color, shadow);
 			y += lineStep;
 			delta -= 120;
 		}

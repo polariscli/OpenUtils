@@ -21,7 +21,6 @@ import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.client.TextUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
-import org.afterlike.openutils.util.game.RenderUtil;
 
 public class FinalKillsHudModule extends Module implements HudModule {
 	private final Position position = new Position(5, 50);
@@ -97,8 +96,7 @@ public class FinalKillsHudModule extends Module implements HudModule {
 				continue;
 			final String displayName = entry.getKey().equals(VOID_KEY) ? VOID_KEY : entry.getKey();
 			final String line = "§r" + displayName + ": §f" + entry.getValue();
-			mc.fontRendererObj.drawString(line, position.getX(), y,
-					RenderUtil.getChromaColor(2L, delta), useHudDropShadow());
+			mc.fontRendererObj.drawString(line, position.getX(), y, 0xFFFFFFFF, useHudDropShadow());
 			y += mc.fontRendererObj.FONT_HEIGHT + 2;
 			delta -= 90;
 		}

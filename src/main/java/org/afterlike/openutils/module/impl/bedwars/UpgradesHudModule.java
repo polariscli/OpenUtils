@@ -17,14 +17,12 @@ import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.client.TextUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
-import org.afterlike.openutils.util.game.RenderUtil;
 
 public class UpgradesHudModule extends Module implements HudModule {
 	private final Position position = new Position(5, 100);
 	private final DescriptionSetting disclaimer;
 	private final BooleanSetting editPosition;
 	private final BooleanSetting dropShadow;
-	private final BooleanSetting chroma;
 	private final BooleanSetting showTrap;
 	private final BooleanSetting showSharp;
 	private final BooleanSetting showProt;
@@ -37,7 +35,6 @@ public class UpgradesHudModule extends Module implements HudModule {
 				.registerSetting(new DescriptionSetting("Hypixel language must be ENGLISH!"));
 		editPosition = this.registerSetting(new BooleanSetting("Edit position", false));
 		dropShadow = this.registerSetting(new BooleanSetting("Drop shadow", true));
-		chroma = this.registerSetting(new BooleanSetting("Chroma", false));
 		showTrap = this.registerSetting(new BooleanSetting("Show trap", true));
 		showSharp = this.registerSetting(new BooleanSetting("Show sharpness", true));
 		showProt = this.registerSetting(new BooleanSetting("Show protection", true));
@@ -87,8 +84,7 @@ public class UpgradesHudModule extends Module implements HudModule {
 		int y = position.getY();
 		int delta = 0;
 		for (final String line : buildLines()) {
-			mc.fontRendererObj.drawString(line, position.getX(), y,
-					RenderUtil.getChromaColor(2L, delta), useHudDropShadow());
+			mc.fontRendererObj.drawString(line, position.getX(), y, 0xFFFFFFFF, useHudDropShadow());
 			y += mc.fontRendererObj.FONT_HEIGHT + 2;
 			delta -= 90;
 		}
@@ -105,26 +101,25 @@ public class UpgradesHudModule extends Module implements HudModule {
 
 	private List<String> buildLines() {
 		final List<String> lines = new ArrayList<>();
-		final String color = chroma.getValue() ? "§r" : "§r§f";
 		if (showTrap.getValue()) {
 			if (trapQueue.isEmpty()) {
-				lines.add(color + "Trap: §cNone");
+				lines.add("Trap: §cNone");
 			} else {
-				lines.add(color + "Trap: §a" + trapQueue.get(0));
+				lines.add("Trap: §a" + trapQueue.get(0));
 			}
 		}
 		if (showSharp.getValue()) {
 			if (sharpUpgrades.isEmpty()) {
-				lines.add(color + "Sharp: §cNone");
+				lines.add("Sharp: §cNone");
 			} else {
-				lines.add(color + "Sharp: §aI");
+				lines.add("Sharp: §aI");
 			}
 		}
 		if (showProt.getValue()) {
 			if (protUpgrades.isEmpty()) {
-				lines.add(color + "Prot: §cNone");
+				lines.add("Prot: §cNone");
 			} else {
-				lines.add(color + "Prot: §a" + protUpgrades.get(0));
+				lines.add("Prot: §a" + protUpgrades.get(0));
 			}
 		}
 		return lines;

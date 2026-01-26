@@ -19,7 +19,6 @@ import org.afterlike.openutils.module.api.setting.impl.DescriptionSetting;
 import org.afterlike.openutils.util.client.ClientUtil;
 import org.afterlike.openutils.util.client.TextUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
-import org.afterlike.openutils.util.game.RenderUtil;
 import org.afterlike.openutils.util.game.WorldUtil;
 
 public class TimersHudModule extends Module implements HudModule {
@@ -114,8 +113,7 @@ public class TimersHudModule extends Module implements HudModule {
 	}
 
 	private void drawLine(final String text, final int x, final int y, final int delta) {
-		mc.fontRendererObj.drawString(text, x, y, RenderUtil.getChromaColor(2L, delta),
-				useHudDropShadow());
+		mc.fontRendererObj.drawString(text, x, y, 0xFFFFFFFF, useHudDropShadow());
 	}
 
 	private void startGame() {
@@ -278,7 +276,8 @@ public class TimersHudModule extends Module implements HudModule {
 		}
 		final int secondsLeft = min * 60 + sec;
 		int inIndex = raw.indexOf("in");
-		if (inIndex == -1) return;
+		if (inIndex == -1)
+			return;
 		final String eventName = raw.substring(0, inIndex).trim();
 		StageEvent scheduled = null;
 		for (final StageEvent event : STAGE_EVENTS) {
