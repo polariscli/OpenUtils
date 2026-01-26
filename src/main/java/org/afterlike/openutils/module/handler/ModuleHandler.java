@@ -19,6 +19,7 @@ import org.afterlike.openutils.util.client.ClientUtil;
 public class ModuleHandler {
 	private final Minecraft mc = Minecraft.getMinecraft();
 	private final List<Module> moduleList = Collections.synchronizedList(new ArrayList<>());
+	private final List<Module> enabledModules = Collections.synchronizedList(new ArrayList<>());
 	public void initialize() {
 		OpenUtils.get().getEventBus().subscribe(this);
 		// movement
@@ -41,6 +42,7 @@ public class ModuleHandler {
 		this.register(new FallViewModule());
 		this.register(new FreeLookModule());
 		this.register(new NameHiderModule()); // TODO: impl
+		this.register(new TargetHudModule());
 		this.register(new ThickRodsModule());
 		// world
 		this.register(new TimeChangerModule());
@@ -69,16 +71,27 @@ public class ModuleHandler {
 		moduleList.add(module);
 	}
 
-	public List<Module> getModules() {
+	public void updateEnabledModules() {
 		synchronized (moduleList) {
-			return Collections.unmodifiableList(new ArrayList<>(moduleList));
+			enabledModules.clear();
+			for (final Module module : moduleList) {
+				if (module.isEnabled()) {
+					enabledModules.add(module);
+				}
+			}
 		}
 	}
 
+	public List<Module> getModules() {
+		return moduleList;
+	}
+
 	public boolean isEnabled(final Class<? extends Module> moduleClass) {
-		for (final Module module : getEnabledModules()) {
-			if (moduleClass.isInstance(module)) {
-				return true;
+		synchronized (enabledModules) {
+			for (final Module module : enabledModules) {
+				if (moduleClass.isInstance(module)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -109,15 +122,7 @@ public class ModuleHandler {
 	}
 
 	public List<Module> getEnabledModules() {
-		final List<Module> enabled = new ArrayList<>();
-		synchronized (moduleList) {
-			for (final Module module : moduleList) {
-				if (module.isEnabled()) {
-					enabled.add(module);
-				}
-			}
-		}
-		return enabled;
+		return enabledModules;
 	}
 
 	@EventHandler
