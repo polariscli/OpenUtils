@@ -41,7 +41,7 @@ public class ModuleHandler {
 		this.register(new DamageTagsModule());
 		this.register(new FallViewModule());
 		this.register(new FreeLookModule());
-		this.register(new NameHiderModule()); // TODO: impl
+		this.register(new NameHiderModule());
 		this.register(new TargetHudModule());
 		this.register(new ThickRodsModule());
 		// world
