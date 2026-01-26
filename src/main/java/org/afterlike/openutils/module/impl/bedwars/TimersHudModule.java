@@ -277,7 +277,9 @@ public class TimersHudModule extends Module implements HudModule {
 			return;
 		}
 		final int secondsLeft = min * 60 + sec;
-		final String eventName = raw.substring(0, raw.indexOf("in")).trim();
+		int inIndex = raw.indexOf("in");
+		if (inIndex == -1) return;
+		final String eventName = raw.substring(0, inIndex).trim();
 		StageEvent scheduled = null;
 		for (final StageEvent event : STAGE_EVENTS) {
 			if (event.name.equalsIgnoreCase(eventName)) {
