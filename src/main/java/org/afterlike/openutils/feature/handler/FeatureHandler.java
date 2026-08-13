@@ -37,6 +37,7 @@ import org.afterlike.openutils.feature.impl.render.AntiShuffleFeature;
 import org.afterlike.openutils.feature.impl.render.CameraFeature;
 import org.afterlike.openutils.feature.impl.render.CapeFeature;
 import org.afterlike.openutils.feature.impl.render.DamageTagsFeature;
+import org.afterlike.openutils.feature.impl.render.FallViewFeature;
 import org.afterlike.openutils.feature.impl.render.FreeLookFeature;
 import org.afterlike.openutils.feature.impl.render.NameHiderFeature;
 import org.afterlike.openutils.feature.impl.render.TargetHudFeature;
@@ -65,6 +66,7 @@ public class FeatureHandler {
 		this.register(new CameraFeature());
 		this.register(new CapeFeature());
 		this.register(new DamageTagsFeature());
+		this.register(new FallViewFeature());
 		this.register(new FreeLookFeature());
 		this.register(new NameHiderFeature());
 		this.register(new TargetHudFeature());

@@ -40,6 +40,7 @@ It is built for players who want practical quality-of-life tools that stay avail
 - Camera
 - Cape
 - Damage Tags
+- Fall View
 - Free Look
 - Name Hider
 - Target HUD

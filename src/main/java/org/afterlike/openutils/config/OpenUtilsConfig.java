@@ -27,6 +27,7 @@ import org.afterlike.openutils.feature.impl.render.AntiShuffleFeature;
 import org.afterlike.openutils.feature.impl.render.CameraFeature;
 import org.afterlike.openutils.feature.impl.render.CapeFeature;
 import org.afterlike.openutils.feature.impl.render.DamageTagsFeature;
+import org.afterlike.openutils.feature.impl.render.FallViewFeature;
 import org.afterlike.openutils.feature.impl.render.FreeLookFeature;
 import org.afterlike.openutils.feature.impl.render.NameHiderFeature;
 import org.afterlike.openutils.feature.impl.render.TargetHudFeature;
@@ -110,16 +111,19 @@ public final class OpenUtilsConfig {
 		@Group(name = "Damage Tags", description = "Floating world-space health change tags.",
 				order = 5)
 		public final DamageTagsFeature damageTags;
-		@Group(name = "Free Look", description = "Hold-to-look camera controls for third person.",
+		@Group(name = "Fall View", description = "Predicted fall damage and landing distance HUD.",
 				order = 6)
+		public final FallViewFeature fallView;
+		@Group(name = "Free Look", description = "Hold-to-look camera controls for third person.",
+				order = 7)
 		public final FreeLookFeature freeLook;
 		@Group(name = "Name Hider",
-				description = "Replaces your visible username in rendered text.", order = 7)
+				description = "Replaces your visible username in rendered text.", order = 8)
 		public final NameHiderFeature nameHider;
-		@Group(name = "Target HUD", description = "Compact combat target health HUD.", order = 8)
+		@Group(name = "Target HUD", description = "Compact combat target health HUD.", order = 9)
 		public final TargetHudFeature targetHud;
 		@Group(name = "Thick Rods", description = "Draws cast fishing lines with extra width.",
-				order = 9)
+				order = 10)
 		public final ThickRodsFeature thickRods;
 		private Render(final FeatureHandler features) {
 			this.animations = features.getFeature(AnimationsFeature.class);
@@ -128,6 +132,7 @@ public final class OpenUtilsConfig {
 			this.camera = features.getFeature(CameraFeature.class);
 			this.cape = features.getFeature(CapeFeature.class);
 			this.damageTags = features.getFeature(DamageTagsFeature.class);
+			this.fallView = features.getFeature(FallViewFeature.class);
 			this.freeLook = features.getFeature(FreeLookFeature.class);
 			this.nameHider = features.getFeature(NameHiderFeature.class);
 			this.targetHud = features.getFeature(TargetHudFeature.class);
