@@ -12,6 +12,7 @@ import org.afterlike.openutils.event.impl.WorldLoadEvent;
 import org.afterlike.openutils.feature.api.FeatureCategory;
 import org.afterlike.openutils.feature.api.ToggleableFeature;
 import org.afterlike.openutils.util.client.ClientUtil;
+import org.afterlike.openutils.util.client.SoundUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
 import re.tsuku.confikure.annotations.Option;
 import re.tsuku.fastbus.Subscribe;
@@ -84,7 +85,7 @@ public class ResourceCountFeature extends ToggleableFeature {
 			ClientUtil.sendMessage(prefix + getItemDisplayName(item) + EnumChatFormatting.GRAY
 					+ " (" + newCount + ")");
 			if (pingSound) {
-				mc.thePlayer.playSound("random.orb", 1.0F, 0.8F);
+				SoundUtil.playSound("random.orb", 1.0F, 0.8F);
 			}
 		}
 	}

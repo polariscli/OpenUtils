@@ -15,6 +15,7 @@ import org.afterlike.openutils.event.impl.WorldLoadEvent;
 import org.afterlike.openutils.feature.api.FeatureCategory;
 import org.afterlike.openutils.feature.api.ToggleableFeature;
 import org.afterlike.openutils.util.client.ClientUtil;
+import org.afterlike.openutils.util.client.SoundUtil;
 import org.afterlike.openutils.util.game.BedWarsUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
 import re.tsuku.confikure.annotations.Option;
@@ -79,7 +80,7 @@ public class UpgradeAlertsFeature extends ToggleableFeature {
 	private void notifyUpgrade(final String teamKey, final String upgrade) {
 		ClientUtil.sendMessage(teamKey + " Team §7purchased §b" + upgrade);
 		if (pingSound) {
-			mc.thePlayer.playSound("random.orb", 1.0F, 1.0F);
+			SoundUtil.playSound("random.orb", 1.0F, 1.0F);
 		}
 	}
 

@@ -22,6 +22,7 @@ import org.afterlike.openutils.event.impl.WorldLoadEvent;
 import org.afterlike.openutils.feature.api.FeatureCategory;
 import org.afterlike.openutils.feature.api.ToggleableFeature;
 import org.afterlike.openutils.util.client.ClientUtil;
+import org.afterlike.openutils.util.client.SoundUtil;
 import org.afterlike.openutils.util.client.TextUtil;
 import org.afterlike.openutils.util.game.BedWarsUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
@@ -232,7 +233,7 @@ public class ItemAlertsFeature extends ToggleableFeature {
 		final String itemMessage = createItemMessage(player, item, stack);
 		ClientUtil.sendMessage(displayName + " §7has " + itemMessage);
 		if (shouldPlaySound(item)) {
-			mc.thePlayer.playSound("random.orb", 1.0F, 1.0F);
+			SoundUtil.playSound("random.orb", 1.0F, 1.0F);
 		}
 		state.lastItem = item;
 		state.lastAlertTime = now;

@@ -7,6 +7,7 @@ import org.afterlike.openutils.event.impl.ReceivePacketEvent;
 import org.afterlike.openutils.feature.api.FeatureCategory;
 import org.afterlike.openutils.feature.api.ToggleableFeature;
 import org.afterlike.openutils.util.client.ClientUtil;
+import org.afterlike.openutils.util.client.SoundUtil;
 import re.tsuku.confikure.annotations.Option;
 import re.tsuku.fastbus.Subscribe;
 
@@ -38,7 +39,7 @@ public class ActionSoundsFeature extends ToggleableFeature {
 				return;
 			if (!mc.thePlayer.isBlocking())
 				return;
-			mc.thePlayer.playSound("random.anvil_land", 0.7F, 1.8F);
+			SoundUtil.playSound("random.anvil_land", 0.7F, 1.8F);
 		}
 	}
 
@@ -52,7 +53,7 @@ public class ActionSoundsFeature extends ToggleableFeature {
 			if (!mc.thePlayer.onGround && mc.thePlayer.fallDistance > 0.0F
 					&& !mc.thePlayer.isInWater() && !mc.thePlayer.isInLava()
 					&& !mc.thePlayer.isRiding()) {
-				mc.thePlayer.playSound("openutils:crit", 0.7F, 1.0F);
+				SoundUtil.playSound("openutils:crit", 0.7F, 1.0F);
 			}
 		}
 	}

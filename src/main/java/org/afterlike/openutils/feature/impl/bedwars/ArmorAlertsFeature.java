@@ -14,6 +14,7 @@ import org.afterlike.openutils.event.impl.WorldLoadEvent;
 import org.afterlike.openutils.feature.api.FeatureCategory;
 import org.afterlike.openutils.feature.api.ToggleableFeature;
 import org.afterlike.openutils.util.client.ClientUtil;
+import org.afterlike.openutils.util.client.SoundUtil;
 import org.afterlike.openutils.util.game.BedWarsUtil;
 import org.afterlike.openutils.util.game.GameModeUtil;
 import re.tsuku.confikure.annotations.Dropdown;
@@ -107,7 +108,7 @@ public class ArmorAlertsFeature extends ToggleableFeature {
 		if ("Diamond Only".equalsIgnoreCase(mode) && armorType != ArmorType.DIAMOND) {
 			return;
 		}
-		mc.thePlayer.playSound("random.orb", 1.0F, 1.0F);
+		SoundUtil.playSound("random.orb", 1.0F, 1.0F);
 	}
 
 	private ArmorType getArmorType(final ItemStack stack) {
